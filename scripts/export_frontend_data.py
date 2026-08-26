@@ -201,6 +201,96 @@ def quality_extra_bundle() -> dict:
     }
 
 
+EDA_VARS = ["temperature", "humidity", "wind_speed", "solar_elevation_deg"]
+
+
+def eda_profiles_bundle(root: Path = ROOT) -> dict:
+    """Hour-of-day generation profile per campus + weather<->power Pearson
+    correlations on daylight-observed rows (Dashboard additions, D-025)."""
+    processed = root / "data" / "processed" / "solar"
+    details = pd.read_parquet(root / "data" / "processed" / "site_details.parquet")
+    campus_of = {int(r.site_id): int(r.campus_id) for r in details.itertuples()}
+
+    slot_sum: dict[int, np.ndarray] = {}
+    slot_cnt: dict[int, np.ndarray] = {}
+    corr_frames: dict[int, list[pd.DataFrame]] = {}
+    cols = ["timestamp", "power", "is_daylight", "temperature", "humidity",
+            "wind_speed", "solar_elevation_deg"]
+    for sid in sorted(campus_of):
+        df = pd.read_parquet(processed, filters=[("site_id", "=", sid)],
+                             columns=cols)
+        day = df["is_daylight"].astype(bool) & df["power"].notna()
+        slots = (df.loc[day, "timestamp"].dt.hour * 4
+                 + df.loc[day, "timestamp"].dt.minute // 15).to_numpy()
+        c = campus_of[sid]
+        slot_sum[c] = (slot_sum.get(c, np.zeros(96))
+                       + np.bincount(slots, weights=df.loc[day, "power"],
+                                     minlength=96))
+        slot_cnt[c] = (slot_cnt.get(c, np.zeros(96))
+                       + np.bincount(slots, minlength=96))
+        sub = df.loc[day, ["power"] + EDA_VARS].dropna()
+        if len(sub):
+            corr_frames.setdefault(c, []).append(sub)
+
+    def means(sums: np.ndarray, cnts: np.ndarray) -> list:
+        return [round(float(s / n), 4) if n > 0 else None
+                for s, n in zip(sums, cnts)]
+
+    tot_sum = (np.sum(list(slot_sum.values()), axis=0) if slot_sum
+               else np.zeros(96))
+    tot_cnt = (np.sum(list(slot_cnt.values()), axis=0) if slot_cnt
+               else np.zeros(96))
+
+    corr_out: dict[int, list] = {}
+    for c in sorted(corr_frames):
+        pooled = pd.concat(corr_frames[c], ignore_index=True)
+        cr = pooled.corr(numeric_only=True)["power"].drop("power")
+        corr_out[c] = [None if pd.isna(cr.get(v)) else round(float(cr[v]), 4)
+                       for v in EDA_VARS]
+
+    return {
+        "hour_of_day": {
+            "slots": [f"{(i * 15) // 60:02d}:{(i * 15) % 60:02d}"
+                      for i in range(96)],
+            "mean_kw": {"ALL": means(tot_sum, tot_cnt),
+                        **{str(c): means(slot_sum[c], slot_cnt[c])
+                           for c in sorted(slot_sum)}},
+        },
+        "correlation": {
+            "campuses": sorted(corr_frames),
+            "vars": EDA_VARS,
+            "power_corr": [corr_out[c] for c in sorted(corr_frames)],
+        },
+    }
+
+
+def missingness_timeline_bundle(root: Path = ROOT) -> dict:
+    """Share of each month's expected 15-min grid carrying no generation row,
+    summed across all sites — Quality page monthly timeline (D-025)."""
+    processed = root / "data" / "processed" / "solar"
+    details = pd.read_parquet(root / "data" / "processed" / "site_details.parquet")
+    exp: dict[str, int] = {}
+    act: dict[str, int] = {}
+    for det in details.itertuples():
+        df = pd.read_parquet(processed,
+                             filters=[("site_id", "=", int(det.site_id))],
+                             columns=["timestamp"])
+        if df.empty:
+            continue
+        t0, t1 = df["timestamp"].min(), df["timestamp"].max()
+        grid = pd.date_range(t0, t1, freq="15min")
+        gexp = pd.Series(grid).dt.to_period("M").value_counts()
+        gact = df["timestamp"].dt.to_period("M").value_counts()
+        for m, n in gexp.items():
+            k = str(m)
+            exp[k] = exp.get(k, 0) + int(n)
+            act[k] = act.get(k, 0) + int(gact.get(m, 0))
+    months = sorted(exp)
+    return {"months": months,
+            "generation_missing_slot_pct": [
+                round(100 * (1 - act[m] / exp[m]), 3) for m in months]}
+
+
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     bundles = {
@@ -209,6 +299,8 @@ def main() -> int:
         "data_quality.json": data_quality_bundle(),
         "site_monthly.json": site_monthly_bundle(),
         "quality_extra.json": quality_extra_bundle(),
+        "eda_profiles.json": eda_profiles_bundle(),
+        "missingness_timeline.json": missingness_timeline_bundle(),
     }
     for name, payload in bundles.items():
         path = OUT / name
