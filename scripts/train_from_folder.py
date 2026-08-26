@@ -143,8 +143,11 @@ def do_verify(raw: Path) -> tuple[dict, pd.DataFrame, pd.DataFrame, pd.DataFrame
     # loaders return CANONICAL columns (schema_map renames) — profile reads them
     ts = pd.to_datetime(gen["timestamp"], errors="coerce")
     cadence_min = None
+    # within-site diffs only — cross-site same-timestamp rows would make
+    # 0 s the modal delta on any multi-site folder
     if ts.notna().sum() > 10:
-        diffs = ts.dropna().sort_values().diff().dropna()
+        ordered = gen.assign(_ts=ts).sort_values(["site_id", "_ts"])
+        diffs = ordered.groupby("site_id", observed=True)["_ts"].diff().dropna()
         mode_delta = diffs.mode().iloc[0] if len(diffs) else None
         if mode_delta is not None and mode_delta.total_seconds() > 0:
             cadence_min = int(mode_delta.total_seconds() // 60)

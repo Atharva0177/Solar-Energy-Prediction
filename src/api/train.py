@@ -130,7 +130,10 @@ def _quick_profile(raw: Path, files: list[dict]) -> dict:
                                "SolarGeneration"])
     ts = pd.to_datetime(gen["Timestamp"], errors="coerce")
     cadence_min = None
-    diffs = ts.dropna().sort_values().diff().dropna()
+    # within-site diffs only — cross-site same-timestamp rows would make
+    # 0 s the modal delta on any multi-site folder
+    ordered = gen.assign(_ts=ts).sort_values(["SiteKey", "_ts"])
+    diffs = ordered.groupby("SiteKey", observed=True)["_ts"].diff().dropna()
     if len(diffs):
         mode_delta = diffs.mode().iloc[0]
         if mode_delta.total_seconds() > 0:
@@ -185,7 +188,10 @@ async def verify_uploaded_dataset(files: list[UploadFile]):
     for f in files:
         name = Path(f.filename or "").name
         if name not in allowed:
-            raise HTTPException(422, f"unexpected file {name!r}; expected one of {sorted(allowed)}")
+            raise HTTPException(422, detail={
+                "message": (f"unexpected file {name!r}; expected one of "
+                            f"{sorted(allowed)}"),
+                "files": []})
         dest = raw / name
         with dest.open("wb") as fh:
             while chunk := await f.read(1 << 20):
