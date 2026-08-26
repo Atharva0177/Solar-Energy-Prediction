@@ -54,8 +54,8 @@ MODEL_HINTS = {
     "transformer": "~10-20 min GPU (15 epochs)",
 }
 
-STAGE_RE = re.compile(r"^== STAGE (\w+) (start|done)")
-FAILED_RE = re.compile(r"^== FAILED (.*)$")
+STAGE_RE = re.compile(r"^== STAGE (\w+) (start|done)", re.MULTILINE)
+FAILED_RE = re.compile(r"^== FAILED (.*)$", re.MULTILINE)
 ARTIFACT_FILES = {"metrics.csv", "result.json", "predictions_test.parquet"}
 
 router = APIRouter(prefix="/train", tags=["train"])
@@ -227,6 +227,22 @@ def _parse_stages(log_text: str) -> tuple[list[dict], str]:
     return stages, current or ""
 
 
+def _final_state(returncode: int | None, text: str) -> dict:
+    """Success = '== DONE' marker present and no '== FAILED' marker.
+
+    Returncode is diagnostic only: torch scripts on this machine can exit
+    code 9 AFTER a successful run (teardown crash — Phase 7 gotcha), so a
+    nonzero exit alone must not flip a finished job to failed.
+    """
+    failed = FAILED_RE.search(text)
+    ok = "== DONE" in text and failed is None
+    return {
+        "status": "done" if ok else "failed",
+        "error": None if ok else (
+            failed.group(1)[:300] if failed else f"exit code {returncode}"),
+    }
+
+
 def _watch(job_id: str) -> None:
     """Background watcher: follow the child until exit; derive final status."""
     global _active_job_id
@@ -247,16 +263,12 @@ def _watch(job_id: str) -> None:
     text = log_path.read_text(encoding="utf-8", errors="replace") \
         if log_path.exists() else ""
     stages, current = _parse_stages(text)
-    ok = proc.returncode == 0 and "== DONE" in text
-    failed = FAILED_RE.search(text, re.MULTILINE)
     job.update({
-        "status": "done" if ok else "failed",
+        **_final_state(proc.returncode, text),
         "stages": stages,
         "stage": "",
         "finished_at": time.time(),
         "returncode": proc.returncode,
-        "error": None if ok else (failed.group(1)[:300] if failed
-                                  else f"exit code {proc.returncode}"),
     })
     with _lock:
         if _active_job_id == job_id:

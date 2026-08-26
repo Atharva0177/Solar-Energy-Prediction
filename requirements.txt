@@ -50,6 +50,7 @@ PyYAML>=6.0
 # ============================================================
 
 fastapi>=0.111
+python-multipart>=0.0.9
 pydantic>=2.7
 uvicorn[standard]>=0.30
 
