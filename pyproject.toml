@@ -1,0 +1,25 @@
+[project]
+name = "solar-power-prediction"
+version = "0.1.0"
+description = "UNISOLAR solar photovoltaic power generation forecasting platform"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = { text = "Proprietary" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+filterwarnings = [
+    # pvlib 0.15 + pandas 2.3 internals trip this numpy>=2.5 deprecation;
+    # our own code constructs Timedeltas with positional unit args instead.
+    "ignore:The 'generic' unit for NumPy timedelta:DeprecationWarning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

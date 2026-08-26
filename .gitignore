@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Environments / tooling
+.env
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Data (large, not in VCS)
+data/raw/
+data/interim/
+data/external/
+
+# ML artifacts
+artifacts/models/
+mlruns/
+mlartifacts/
+lightning_logs/
+*.pt
+*.pth
+*.ckpt
+
+# Node (frontend)
+node_modules/
+frontend/dist/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large processed data & raw dataset (regenerable via scripts)
+data/processed/
+data/train_jobs/
+unisolar/
+
+# Trained model artifacts at repo root (regenerable via phase scripts)
+models/
+
+# Skill scratch state
+.superpowers/

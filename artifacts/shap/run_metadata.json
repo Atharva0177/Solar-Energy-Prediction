@@ -1,0 +1,125 @@
+{
+  "run_name": "shap-xgboost-test-v1",
+  "generated_at": "2026-08-25T04:13:32+00:00",
+  "explained_model_run": "xgboost-site-all-h1-v1",
+  "explainer": "shap.TreeExplainer (exact, tree_path_dependent)",
+  "shap_version": "0.52.0",
+  "seed": 42,
+  "split_protocol": "D-011 per-site chronological (TEST split)",
+  "global_sample_rows": 20000,
+  "n_features_explained": 43,
+  "additivity_max_abs_err": 6.866455078125e-05,
+  "top10_mean_abs_shap": [
+    {
+      "rank": 1,
+      "feature": "power_lag_1",
+      "mean_abs_shap": 3.1342499256134033,
+      "share_of_total": 0.3861199915409088
+    },
+    {
+      "rank": 2,
+      "feature": "power_rolling_mean_3600s",
+      "mean_abs_shap": 2.074460029602051,
+      "share_of_total": 0.2555600106716156
+    },
+    {
+      "rank": 3,
+      "feature": "power_rolling_min_3600s",
+      "mean_abs_shap": 0.3556399941444397,
+      "share_of_total": 0.04380999878048897
+    },
+    {
+      "rank": 4,
+      "feature": "sin_hour",
+      "mean_abs_shap": 0.344760000705719,
+      "share_of_total": 0.04247000068426132
+    },
+    {
+      "rank": 5,
+      "feature": "solar_elevation_deg",
+      "mean_abs_shap": 0.2560200095176697,
+      "share_of_total": 0.031539998948574066
+    },
+    {
+      "rank": 6,
+      "feature": "site_id",
+      "mean_abs_shap": 0.21863000094890594,
+      "share_of_total": 0.026930000633001328
+    },
+    {
+      "rank": 7,
+      "feature": "hour",
+      "mean_abs_shap": 0.18776999413967133,
+      "share_of_total": 0.02312999963760376
+    },
+    {
+      "rank": 8,
+      "feature": "power_rolling_max_3600s",
+      "mean_abs_shap": 0.1851000040769577,
+      "share_of_total": 0.02280000038444996
+    },
+    {
+      "rank": 9,
+      "feature": "zenith_deg",
+      "mean_abs_shap": 0.17387999594211578,
+      "share_of_total": 0.02142000012099743
+    },
+    {
+      "rank": 10,
+      "feature": "power_rolling_min_21600s",
+      "mean_abs_shap": 0.15278999507427216,
+      "share_of_total": 0.01882000081241131
+    }
+  ],
+  "local_scenarios": {
+    "night_zero": {
+      "site_id": 27,
+      "timestamp": "2021-12-21 01:30:00",
+      "power_observed": 0.125,
+      "prediction": 13.471,
+      "base_value": 6.5784,
+      "top_positive": "power_rolling_min_3600s +5.42; power_lag_1 +2.36; power_rolling_max_86400s +1.71",
+      "top_negative": "power_rolling_mean_3600s -2.50; solar_elevation_deg -1.67; zenith_deg -1.34"
+    },
+    "clear_noon_peak": {
+      "site_id": 11,
+      "timestamp": "2022-03-09 13:45:00",
+      "power_observed": 92.75,
+      "prediction": 86.493,
+      "base_value": 6.5784,
+      "top_positive": "power_lag_1 +41.89; power_rolling_mean_3600s +19.18; power_rolling_min_3600s +4.88",
+      "top_negative": "-"
+    },
+    "morning_ramp": {
+      "site_id": 41,
+      "timestamp": "2021-12-24 07:15:00",
+      "power_observed": 0.938,
+      "prediction": 1.456,
+      "base_value": 6.5784,
+      "top_positive": "sin_hour +0.43; hour +0.19; site_id +0.09",
+      "top_negative": "power_lag_1 -3.30; power_rolling_mean_3600s -1.50; solar_elevation_deg -0.27"
+    },
+    "overcast_afternoon": {
+      "site_id": 2,
+      "timestamp": "2022-01-05 15:30:00",
+      "power_observed": 1.094,
+      "prediction": 0.894,
+      "base_value": 6.5784,
+      "top_positive": "solar_elevation_deg +0.19; zenith_deg +0.13; power_lag_96 +0.13",
+      "top_negative": "power_lag_1 -3.59; power_rolling_mean_3600s -1.61; power_rolling_max_3600s -0.26"
+    }
+  },
+  "artifacts": [
+    "shap_beeswarm.png",
+    "shap_dependence_1_power_lag_1.png",
+    "shap_dependence_2_power_rolling_mean_3600s.png",
+    "shap_dependence_3_power_rolling_min_3600s.png",
+    "shap_global_importance.csv",
+    "shap_local_contributions.csv",
+    "shap_summary_bar.png",
+    "shap_waterfall_clear_noon_peak.png",
+    "shap_waterfall_morning_ramp.png",
+    "shap_waterfall_night_zero.png",
+    "shap_waterfall_overcast_afternoon.png"
+  ]
+}

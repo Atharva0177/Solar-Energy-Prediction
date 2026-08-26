@@ -1,0 +1,214 @@
+{
+ "generation": {
+  "duplicate_keys": 0,
+  "impossible_values": 0,
+  "missing_slots": 52492,
+  "groups_checked": 42,
+  "worst_sites": [
+   {
+    "site_id": 13,
+    "missing_pct": 2.157
+   },
+   {
+    "site_id": 1,
+    "missing_pct": 2.103
+   },
+   {
+    "site_id": 2,
+    "missing_pct": 2.103
+   },
+   {
+    "site_id": 3,
+    "missing_pct": 2.103
+   },
+   {
+    "site_id": 7,
+    "missing_pct": 2.103
+   }
+  ],
+  "power_missing_raw_pct": 56.235
+ },
+ "weather_overall_pct": {
+  "apparent_temperature": 28.812,
+  "temperature": 28.812,
+  "dew_point_temperature": 28.812,
+  "humidity": 28.812,
+  "wind_speed": 43.815,
+  "wind_direction": 43.815
+ },
+ "weather_monthly": [
+  {
+   "month": "2020-01",
+   "temperature_pct": null,
+   "humidity_pct": null,
+   "wind_speed_pct": null
+  },
+  {
+   "month": "2020-02",
+   "temperature_pct": null,
+   "humidity_pct": null,
+   "wind_speed_pct": null
+  },
+  {
+   "month": "2020-03",
+   "temperature_pct": null,
+   "humidity_pct": null,
+   "wind_speed_pct": null
+  },
+  {
+   "month": "2020-04",
+   "temperature_pct": null,
+   "humidity_pct": null,
+   "wind_speed_pct": null
+  },
+  {
+   "month": "2020-05",
+   "temperature_pct": null,
+   "humidity_pct": null,
+   "wind_speed_pct": null
+  },
+  {
+   "month": "2020-06",
+   "temperature_pct": null,
+   "humidity_pct": null,
+   "wind_speed_pct": null
+  },
+  {
+   "month": "2020-07",
+   "temperature_pct": null,
+   "humidity_pct": null,
+   "wind_speed_pct": null
+  },
+  {
+   "month": "2020-08",
+   "temperature_pct": null,
+   "humidity_pct": null,
+   "wind_speed_pct": null
+  },
+  {
+   "month": "2020-09",
+   "temperature_pct": null,
+   "humidity_pct": null,
+   "wind_speed_pct": null
+  },
+  {
+   "month": "2020-10",
+   "temperature_pct": 0.1344,
+   "humidity_pct": 0.1344,
+   "wind_speed_pct": 0.1344
+  },
+  {
+   "month": "2020-11",
+   "temperature_pct": null,
+   "humidity_pct": null,
+   "wind_speed_pct": null
+  },
+  {
+   "month": "2020-12",
+   "temperature_pct": 4.8237,
+   "humidity_pct": 4.8237,
+   "wind_speed_pct": 8.8604
+  },
+  {
+   "month": "2021-01",
+   "temperature_pct": 23.0242,
+   "humidity_pct": 23.0242,
+   "wind_speed_pct": 23.0242
+  },
+  {
+   "month": "2021-02",
+   "temperature_pct": 40.0,
+   "humidity_pct": 40.0,
+   "wind_speed_pct": 40.0
+  },
+  {
+   "month": "2021-03",
+   "temperature_pct": 40.0,
+   "humidity_pct": 40.0,
+   "wind_speed_pct": 40.0
+  },
+  {
+   "month": "2021-04",
+   "temperature_pct": 40.0,
+   "humidity_pct": 40.0,
+   "wind_speed_pct": 40.0
+  },
+  {
+   "month": "2021-05",
+   "temperature_pct": 40.0,
+   "humidity_pct": 40.0,
+   "wind_speed_pct": 40.0
+  },
+  {
+   "month": "2021-06",
+   "temperature_pct": 40.2986,
+   "humidity_pct": 40.2986,
+   "wind_speed_pct": 40.5903
+  },
+  {
+   "month": "2021-07",
+   "temperature_pct": 52.7957,
+   "humidity_pct": 52.7957,
+   "wind_speed_pct": 63.1519
+  },
+  {
+   "month": "2021-08",
+   "temperature_pct": 59.2339,
+   "humidity_pct": 59.2339,
+   "wind_speed_pct": 80.0
+  },
+  {
+   "month": "2021-09",
+   "temperature_pct": 59.2847,
+   "humidity_pct": 59.2847,
+   "wind_speed_pct": 80.0
+  },
+  {
+   "month": "2021-10",
+   "temperature_pct": 53.2863,
+   "humidity_pct": 53.2863,
+   "wind_speed_pct": 87.6411
+  },
+  {
+   "month": "2021-11",
+   "temperature_pct": 48.7986,
+   "humidity_pct": 48.7986,
+   "wind_speed_pct": 100.0
+  },
+  {
+   "month": "2021-12",
+   "temperature_pct": 49.0995,
+   "humidity_pct": 49.0995,
+   "wind_speed_pct": 100.0
+  },
+  {
+   "month": "2022-01",
+   "temperature_pct": 48.9046,
+   "humidity_pct": 48.9046,
+   "wind_speed_pct": 100.0
+  },
+  {
+   "month": "2022-02",
+   "temperature_pct": 49.5238,
+   "humidity_pct": 49.5238,
+   "wind_speed_pct": 100.0
+  },
+  {
+   "month": "2022-03",
+   "temperature_pct": 49.5228,
+   "humidity_pct": 49.5228,
+   "wind_speed_pct": 100.0
+  },
+  {
+   "month": "2022-04",
+   "temperature_pct": 49.0232,
+   "humidity_pct": 49.0232,
+   "wind_speed_pct": 100.0
+  }
+ ],
+ "cleaning": {
+  "total_operations": 8,
+  "weather_interpolated_rows": 353714
+ },
+ "outliers_flagged": 0
+}

@@ -1,0 +1,54 @@
+{
+  "logged_at_utc": "2026-08-24T04:51:44.922362+00:00",
+  "total_operations": 8,
+  "operations": [
+    {
+      "dataset": "generation",
+      "operation": "select_timezone_for_solar_position",
+      "rows_affected": 0,
+      "detail": "chosen=Australia/Melbourne; evidence=timezone_decision.json"
+    },
+    {
+      "dataset": "merged",
+      "operation": "interpolate_weather:temperature",
+      "rows_affected": 88423,
+      "detail": "method=time, limit=2 steps within campus"
+    },
+    {
+      "dataset": "merged",
+      "operation": "interpolate_weather:apparent_temperature",
+      "rows_affected": 88423,
+      "detail": "method=time, limit=2 steps within campus"
+    },
+    {
+      "dataset": "merged",
+      "operation": "interpolate_weather:dew_point_temperature",
+      "rows_affected": 88423,
+      "detail": "method=time, limit=2 steps within campus"
+    },
+    {
+      "dataset": "merged",
+      "operation": "interpolate_weather:humidity",
+      "rows_affected": 88423,
+      "detail": "method=time, limit=2 steps within campus"
+    },
+    {
+      "dataset": "merged",
+      "operation": "interpolate_weather:wind_speed",
+      "rows_affected": 22,
+      "detail": "method=time, limit=2 steps within campus"
+    },
+    {
+      "dataset": "merged",
+      "operation": "leave_power_missing_as_nan",
+      "rows_affected": 1536301,
+      "detail": "missing generation is never imputed with zeros (PRD \u00a710)"
+    },
+    {
+      "dataset": "merged",
+      "operation": "no_interpolation_wind_direction",
+      "rows_affected": 1181433,
+      "detail": "circular quantity - linear interpolation invalid"
+    }
+  ]
+}

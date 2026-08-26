@@ -1,0 +1,118 @@
+{
+  "run_name": "conformal-h1-test-v1",
+  "generated_at": "2026-08-25T04:39:13+00:00",
+  "method": "split conformal, absolute residuals, finite-sample quantile",
+  "calibration_split": "val (observed targets; also fed xgboost early stopping \u2014 see D-018 caveat)",
+  "evaluation_split": "test",
+  "explained_model_run": "xgboost-site-all-h1-v1",
+  "levels": {
+    "0.9": 0.1,
+    "0.8": 0.2
+  },
+  "regimes": [
+    "day_lag",
+    "day_nolag",
+    "night_lag",
+    "night_nolag"
+  ],
+  "calibration": {
+    "xgboost|global|0.9": {
+      "global_radius": 2.9217,
+      "regime_radii": {},
+      "n": {
+        "global": 201552
+      }
+    },
+    "xgboost|global|0.8": {
+      "global_radius": 1.556,
+      "regime_radii": {},
+      "n": {
+        "global": 201552
+      }
+    },
+    "xgboost|mondrian|0.9": {
+      "global_radius": 2.9217,
+      "regime_radii": {
+        "day_nolag": 3.0758,
+        "day_lag": 2.9145,
+        "night_lag": 0.4373,
+        "night_nolag": 13.4111
+      },
+      "n": {
+        "global": 201552,
+        "day_nolag": 9317,
+        "day_lag": 191934,
+        "night_lag": 229,
+        "night_nolag": 72
+      }
+    },
+    "xgboost|mondrian|0.8": {
+      "global_radius": 1.556,
+      "regime_radii": {
+        "day_nolag": 1.5937,
+        "day_lag": 1.5556,
+        "night_lag": 0.2938,
+        "night_nolag": 11.744
+      },
+      "n": {
+        "global": 201552,
+        "day_nolag": 9317,
+        "day_lag": 191934,
+        "night_lag": 229,
+        "night_nolag": 72
+      }
+    },
+    "persistence|global|0.9": {
+      "global_radius": 8.1953,
+      "regime_radii": {},
+      "n": {
+        "global": 186080
+      }
+    },
+    "persistence|global|0.8": {
+      "global_radius": 4.6992,
+      "regime_radii": {},
+      "n": {
+        "global": 186080
+      }
+    },
+    "persistence|mondrian|0.9": {
+      "global_radius": 8.1953,
+      "regime_radii": {
+        "day_nolag": 6.5938,
+        "day_lag": 8.25,
+        "night_lag": 0.5,
+        "night_nolag": 0.0
+      },
+      "n": {
+        "global": 186080,
+        "day_nolag": 6823,
+        "day_lag": 179134,
+        "night_lag": 120,
+        "night_nolag": 3
+      }
+    },
+    "persistence|mondrian|0.8": {
+      "global_radius": 4.6992,
+      "regime_radii": {
+        "day_nolag": 3.25,
+        "day_lag": 4.75,
+        "night_lag": 0.3125,
+        "night_nolag": 0.0
+      },
+      "n": {
+        "global": 186080,
+        "day_nolag": 6823,
+        "day_lag": 179134,
+        "night_lag": 120,
+        "night_nolag": 3
+      }
+    }
+  },
+  "seed": 42,
+  "n_rows": {
+    "train": 1912356,
+    "val": 409796,
+    "test": 409794
+  }
+}

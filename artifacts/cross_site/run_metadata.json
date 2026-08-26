@@ -1,0 +1,100 @@
+{
+  "generated_at": "2026-08-25T03:43:07+00:00",
+  "seed": 42,
+  "device": "NVIDIA GeForce RTX 5070",
+  "sites": {
+    "train": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      10,
+      11,
+      12,
+      15,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      27,
+      30,
+      31,
+      34,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42
+    ],
+    "val": [
+      9,
+      14,
+      16,
+      28,
+      32,
+      35
+    ],
+    "test": [
+      7,
+      13,
+      26,
+      29,
+      33,
+      36
+    ]
+  },
+  "n_rows": {
+    "train": 1354463,
+    "val_seen": 290247,
+    "test_seen": 290244,
+    "val_unseen": 387211,
+    "test_unseen": 409781
+  },
+  "nrmse_denominator_pooled_train_range_kwh": 99.119,
+  "models_requested": [
+    "persistence",
+    "xgboost",
+    "lstm",
+    "gru",
+    "transformer"
+  ],
+  "model_meta": {
+    "persistence": {
+      "training_seconds": 0.873
+    },
+    "xgboost": {
+      "training_seconds": 11.14,
+      "best_iteration": 174
+    },
+    "lstm": {
+      "training_seconds": 74.88,
+      "epochs_ran": 13,
+      "best_val_rmse_normalized": 0.28039
+    },
+    "gru": {
+      "training_seconds": 70.26,
+      "epochs_ran": 14,
+      "best_val_rmse_normalized": 0.27745
+    },
+    "transformer": {
+      "training_seconds": 234.04,
+      "epochs_ran": 11,
+      "best_val_rmse_normalized": 0.28235
+    }
+  },
+  "python_version": "3.13.15",
+  "package_versions": {
+    "torch": "2.13.0+cu132",
+    "pandas": "2.3.3",
+    "numpy": "2.5.2"
+  }
+}

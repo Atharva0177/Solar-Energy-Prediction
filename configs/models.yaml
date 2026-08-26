@@ -1,0 +1,68 @@
+# Model registry flags + hyperparameters (PRD §22, §43).
+# Phase order per PRD Rule 8: enable models only when their phase is active.
+
+models:
+  random_forest:
+    enabled: false
+
+  xgboost:
+    enabled: true
+    params:
+      objective: reg:squarederror
+      n_estimators: 2000
+      learning_rate: 0.05
+      max_depth: 8
+      min_child_weight: 5
+      subsample: 0.9
+      colsample_bytree: 0.9
+      reg_lambda: 1.0
+
+  lstm:
+    enabled: true
+    params:
+      lookback_steps: 96        # 24 h of 15-min slots
+      hidden_size: 128
+      num_layers: 2
+      dropout: 0.1
+      lr: 0.001
+      weight_decay: 0.0001
+      batch_size: 1024
+      max_epochs: 15
+      patience: 4               # early-stop patience (epochs without val gain)
+      grad_clip_norm: 1.0       # PRD §49 gradient clipping
+      scheduler_factor: 0.5     # ReduceLROnPlateau on val RMSE (PRD §49)
+      scheduler_patience: 1
+
+  gru:
+    enabled: true
+    params:
+      lookback_steps: 96
+      hidden_size: 128
+      num_layers: 2
+      dropout: 0.1
+      lr: 0.001
+      weight_decay: 0.0001
+      batch_size: 1024
+      max_epochs: 15
+      patience: 4
+      grad_clip_norm: 1.0
+      scheduler_factor: 0.5
+      scheduler_patience: 1
+
+  transformer:
+    enabled: true
+    params:
+      lookback_steps: 96        # same windows as Phase 7 (D-014)
+      d_model: 128
+      nhead: 8
+      num_layers: 2
+      dim_feedforward: 256
+      dropout: 0.1
+      lr: 0.0005                # transformers prefer lower LR than the RNNs
+      weight_decay: 0.0001
+      batch_size: 1024
+      max_epochs: 15
+      patience: 4
+      grad_clip_norm: 1.0
+      scheduler_factor: 0.5
+      scheduler_patience: 1

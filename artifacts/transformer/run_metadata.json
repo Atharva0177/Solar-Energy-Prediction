@@ -1,0 +1,223 @@
+{
+  "run_name": "transformer-site-all-h1-v1",
+  "generated_at": "2026-08-25T02:53:31+00:00",
+  "task": "single-step forecast, horizon = 1 x 15-min, sequence model",
+  "architecture": "transformer",
+  "config": {
+    "models": {
+      "random_forest": {
+        "enabled": false
+      },
+      "xgboost": {
+        "enabled": true,
+        "params": {
+          "objective": "reg:squarederror",
+          "n_estimators": 2000,
+          "learning_rate": 0.05,
+          "max_depth": 8,
+          "min_child_weight": 5,
+          "subsample": 0.9,
+          "colsample_bytree": 0.9,
+          "reg_lambda": 1.0
+        }
+      },
+      "lstm": {
+        "enabled": true,
+        "params": {
+          "lookback_steps": 96,
+          "hidden_size": 128,
+          "num_layers": 2,
+          "dropout": 0.1,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "batch_size": 1024,
+          "max_epochs": 15,
+          "patience": 4,
+          "grad_clip_norm": 1.0,
+          "scheduler_factor": 0.5,
+          "scheduler_patience": 1
+        }
+      },
+      "gru": {
+        "enabled": true,
+        "params": {
+          "lookback_steps": 96,
+          "hidden_size": 128,
+          "num_layers": 2,
+          "dropout": 0.1,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "batch_size": 1024,
+          "max_epochs": 15,
+          "patience": 4,
+          "grad_clip_norm": 1.0,
+          "scheduler_factor": 0.5,
+          "scheduler_patience": 1
+        }
+      },
+      "transformer": {
+        "enabled": true,
+        "params": {
+          "lookback_steps": 96,
+          "d_model": 128,
+          "nhead": 8,
+          "num_layers": 2,
+          "dim_feedforward": 256,
+          "dropout": 0.1,
+          "lr": 0.0005,
+          "weight_decay": 0.0001,
+          "batch_size": 1024,
+          "max_epochs": 15,
+          "patience": 4,
+          "grad_clip_norm": 1.0,
+          "scheduler_factor": 0.5,
+          "scheduler_patience": 1
+        }
+      }
+    },
+    "training": {
+      "seed": 42,
+      "train_ratio": 0.7,
+      "val_ratio": 0.15,
+      "test_ratio": 0.15,
+      "early_stopping_rounds": 100,
+      "horizons_steps_15min": [
+        1
+      ]
+    },
+    "forecast": {
+      "cadence_minutes": 15
+    },
+    "paths": {
+      "features_dir": "data/processed/features",
+      "processed_dir": "data/processed/solar",
+      "site_details": "data/processed/site_details.parquet"
+    }
+  },
+  "seed": 42,
+  "device": "NVIDIA GeForce RTX 5070",
+  "mixed_precision": true,
+  "channels": [
+    "power",
+    "power_observed",
+    "sin_hour",
+    "cos_hour",
+    "sin_day_of_year",
+    "cos_day_of_year",
+    "temperature",
+    "humidity",
+    "wind_speed",
+    "wind_dir_sin",
+    "wind_dir_cos",
+    "solar_elevation_deg",
+    "zenith_deg"
+  ],
+  "lookback_steps": 96,
+  "n_windows_train": 801397,
+  "n_train_val_test": [
+    1912356,
+    409796,
+    409794
+  ],
+  "epochs_ran": 15,
+  "best_val_rmse_normalized": 0.27455,
+  "training_history": [
+    {
+      "epoch": 1,
+      "lr": 0.0005,
+      "val_rmse": 0.302703
+    },
+    {
+      "epoch": 2,
+      "lr": 0.0005,
+      "val_rmse": 0.296933
+    },
+    {
+      "epoch": 3,
+      "lr": 0.0005,
+      "val_rmse": 0.287006
+    },
+    {
+      "epoch": 4,
+      "lr": 0.0005,
+      "val_rmse": 0.287174
+    },
+    {
+      "epoch": 5,
+      "lr": 0.0005,
+      "val_rmse": 0.285106
+    },
+    {
+      "epoch": 6,
+      "lr": 0.0005,
+      "val_rmse": 0.282189
+    },
+    {
+      "epoch": 7,
+      "lr": 0.0005,
+      "val_rmse": 0.286971
+    },
+    {
+      "epoch": 8,
+      "lr": 0.0005,
+      "val_rmse": 0.281418
+    },
+    {
+      "epoch": 9,
+      "lr": 0.0005,
+      "val_rmse": 0.28929
+    },
+    {
+      "epoch": 10,
+      "lr": 0.0005,
+      "val_rmse": 0.284987
+    },
+    {
+      "epoch": 11,
+      "lr": 0.00025,
+      "val_rmse": 0.278251
+    },
+    {
+      "epoch": 12,
+      "lr": 0.00025,
+      "val_rmse": 0.277102
+    },
+    {
+      "epoch": 13,
+      "lr": 0.00025,
+      "val_rmse": 0.280902
+    },
+    {
+      "epoch": 14,
+      "lr": 0.00025,
+      "val_rmse": 0.274546
+    },
+    {
+      "epoch": 15,
+      "lr": 0.00025,
+      "val_rmse": 0.278001
+    }
+  ],
+  "final_lr": 0.00025,
+  "grad_clip_norm": 1.0,
+  "target_standardization": {
+    "mean": 6.5788247338750345,
+    "std": 10.765871341973517
+  },
+  "channel_scaler_fit_on": "train split only",
+  "nrmse_denominator_pooled_train_range_kwh": 99.119,
+  "dataset_fingerprint_features": "909613e5ebf31898",
+  "training_seconds": 437.2,
+  "python_version": "3.13.15",
+  "package_versions": {
+    "torch": "2.13.0+cu132",
+    "pandas": "2.3.3",
+    "numpy": "2.5.2",
+    "mlflow": "3.15.1"
+  },
+  "artifacts": {
+    "checkpoint": "models\\transformer_site_all_h1_v1.pt",
+    "metrics": "artifacts\\transformer\\metrics.csv",
+    "predictions": "artifacts\\transformer\\predictions_test.parquet"
+  }
+}

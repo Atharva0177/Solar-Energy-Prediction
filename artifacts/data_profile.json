@@ -1,0 +1,1277 @@
+{
+  "generated_at_utc": "2026-08-24T04:31:46.116810+00:00",
+  "data_directory": "unisolar",
+  "files_found": [
+    "unisolar\\Monthly_Summary_Solar.csv",
+    "unisolar\\Solar_Energy_Generation.csv",
+    "unisolar\\Solar_Site_Details.csv",
+    "unisolar\\Weather_Data_reordered_all.csv"
+  ],
+  "license_or_readme_files_present": [],
+  "profiles": [
+    {
+      "file": "unisolar\\Monthly_Summary_Solar.csv",
+      "size_bytes": 63126,
+      "format": "csv",
+      "shape": {
+        "rows": 1176,
+        "columns": 7
+      },
+      "columns": [
+        "SiteKey",
+        "Year",
+        "Month",
+        "DataStatus",
+        "AverageSolarGeneration",
+        "MaxSolarGeneration",
+        "MinSolarGeneration"
+      ],
+      "dtypes": {
+        "SiteKey": "int64",
+        "Year": "int64",
+        "Month": "object",
+        "DataStatus": "bool",
+        "AverageSolarGeneration": "float64",
+        "MaxSolarGeneration": "float64",
+        "MinSolarGeneration": "float64"
+      },
+      "head_5": [
+        {
+          "SiteKey": 1,
+          "Year": 2020,
+          "Month": "January",
+          "DataStatus": true,
+          "AverageSolarGeneration": 10.157125000000187,
+          "MaxSolarGeneration": 21.77799999999116,
+          "MinSolarGeneration": 0.1010000000242144
+        },
+        {
+          "SiteKey": 2,
+          "Year": 2020,
+          "Month": "January",
+          "DataStatus": true,
+          "AverageSolarGeneration": 8.536874695863766,
+          "MaxSolarGeneration": 18.552999999985328,
+          "MinSolarGeneration": 0.1000000000058207
+        },
+        {
+          "SiteKey": 3,
+          "Year": 2020,
+          "Month": "January",
+          "DataStatus": true,
+          "AverageSolarGeneration": 6.309834421365018,
+          "MaxSolarGeneration": 13.322000000014668,
+          "MinSolarGeneration": 0.1030000000027939
+        },
+        {
+          "SiteKey": 4,
+          "Year": 2020,
+          "Month": "January",
+          "DataStatus": false,
+          "AverageSolarGeneration": null,
+          "MaxSolarGeneration": null,
+          "MinSolarGeneration": null
+        },
+        {
+          "SiteKey": 5,
+          "Year": 2020,
+          "Month": "January",
+          "DataStatus": false,
+          "AverageSolarGeneration": null,
+          "MaxSolarGeneration": null,
+          "MinSolarGeneration": null
+        }
+      ],
+      "tail_5": [
+        {
+          "SiteKey": 38,
+          "Year": 2022,
+          "Month": "April",
+          "DataStatus": true,
+          "AverageSolarGeneration": 3.4174343849416755,
+          "MaxSolarGeneration": 10.3203125,
+          "MinSolarGeneration": 0.1015625
+        },
+        {
+          "SiteKey": 39,
+          "Year": 2022,
+          "Month": "April",
+          "DataStatus": true,
+          "AverageSolarGeneration": 2.1791879134509373,
+          "MaxSolarGeneration": 6.234375,
+          "MinSolarGeneration": 0.1015625
+        },
+        {
+          "SiteKey": 40,
+          "Year": 2022,
+          "Month": "April",
+          "DataStatus": true,
+          "AverageSolarGeneration": 4.419520547945205,
+          "MaxSolarGeneration": 13.828125,
+          "MinSolarGeneration": 0.109375
+        },
+        {
+          "SiteKey": 41,
+          "Year": 2022,
+          "Month": "April",
+          "DataStatus": true,
+          "AverageSolarGeneration": 3.7329853579175705,
+          "MaxSolarGeneration": 20.6875,
+          "MinSolarGeneration": 0.125
+        },
+        {
+          "SiteKey": 42,
+          "Year": 2022,
+          "Month": "April",
+          "DataStatus": true,
+          "AverageSolarGeneration": 2.131723175381264,
+          "MaxSolarGeneration": 6.140625,
+          "MinSolarGeneration": 0.109375
+        }
+      ],
+      "timestamp_columns": {},
+      "primary_timestamp_column": null,
+      "grouping_column": "SiteKey",
+      "site_id_candidates": {
+        "SiteKey": {
+          "unique_values": 42,
+          "matched_by_name": true,
+          "matched_by_id_suffix": true,
+          "plausible_id_column": true,
+          "sample_values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        "Year": {
+          "unique_values": 3,
+          "matched_by_name": false,
+          "matched_by_id_suffix": false,
+          "plausible_id_column": false,
+          "sample_values": [
+            2020,
+            2021,
+            2022
+          ]
+        },
+        "Month": {
+          "unique_values": 12,
+          "matched_by_name": false,
+          "matched_by_id_suffix": false,
+          "plausible_id_column": false,
+          "sample_values": [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October"
+          ]
+        },
+        "DataStatus": {
+          "unique_values": 2,
+          "matched_by_name": false,
+          "matched_by_id_suffix": false,
+          "plausible_id_column": false,
+          "sample_values": [
+            true,
+            false
+          ]
+        }
+      },
+      "target_candidates": {
+        "AverageSolarGeneration": {
+          "matched_keyword": "Generation",
+          "dtype": "float64",
+          "min": 0.4677315686558517,
+          "max": 43.90711304616653,
+          "mean": 6.551886567228178,
+          "zero_fraction": 0.0
+        },
+        "MaxSolarGeneration": {
+          "matched_keyword": "Generation",
+          "dtype": "float64",
+          "min": 1.20703125,
+          "max": 99.21879999997329,
+          "mean": 16.93353928074482,
+          "zero_fraction": 0.0
+        },
+        "MinSolarGeneration": {
+          "matched_keyword": "Generation",
+          "dtype": "float64",
+          "min": 0.1000000000058207,
+          "max": 0.3212890625,
+          "mean": 0.10902706442117728,
+          "zero_fraction": 0.0
+        }
+      },
+      "missing_percentage": {
+        "SiteKey": 0.0,
+        "Year": 0.0,
+        "Month": 0.0,
+        "DataStatus": 0.0,
+        "AverageSolarGeneration": 17.007,
+        "MaxSolarGeneration": 17.007,
+        "MinSolarGeneration": 17.007
+      },
+      "categorical_summary": {
+        "SiteKey": {
+          "n_unique": 42,
+          "value_counts": {
+            "1": 28,
+            "2": 28,
+            "3": 28,
+            "4": 28,
+            "5": 28,
+            "6": 28,
+            "7": 28,
+            "8": 28,
+            "9": 28,
+            "10": 28,
+            "11": 28,
+            "12": 28,
+            "13": 28,
+            "14": 28,
+            "15": 28,
+            "16": 28,
+            "17": 28,
+            "18": 28,
+            "19": 28,
+            "20": 28,
+            "21": 28,
+            "22": 28,
+            "23": 28,
+            "24": 28,
+            "25": 28,
+            "26": 28,
+            "27": 28,
+            "28": 28,
+            "29": 28,
+            "30": 28,
+            "31": 28,
+            "32": 28,
+            "33": 28,
+            "34": 28,
+            "35": 28,
+            "36": 28,
+            "37": 28,
+            "38": 28,
+            "39": 28,
+            "40": 28,
+            "41": 28,
+            "42": 28
+          }
+        },
+        "Year": {
+          "n_unique": 3,
+          "value_counts": {
+            "2020": 504,
+            "2021": 504,
+            "2022": 168
+          }
+        },
+        "Month": {
+          "n_unique": 12,
+          "value_counts": {
+            "January": 126,
+            "February": 126,
+            "March": 126,
+            "April": 126,
+            "May": 84,
+            "June": 84,
+            "July": 84,
+            "August": 84,
+            "September": 84,
+            "October": 84,
+            "November": 84,
+            "December": 84
+          }
+        },
+        "DataStatus": {
+          "n_unique": 2,
+          "value_counts": {
+            "true": 976,
+            "false": 200
+          }
+        }
+      },
+      "sampling_frequency": {},
+      "duplicates": {
+        "fully_duplicated_rows": 0,
+        "total_rows": 1176
+      },
+      "unit_metadata_in_names": {},
+      "memory_usage_mb": 0.11
+    },
+    {
+      "file": "unisolar\\Solar_Energy_Generation.csv",
+      "size_bytes": 83812309,
+      "format": "csv",
+      "shape": {
+        "rows": 2731946,
+        "columns": 4
+      },
+      "columns": [
+        "CampusKey",
+        "SiteKey",
+        "Timestamp",
+        "SolarGeneration"
+      ],
+      "dtypes": {
+        "CampusKey": "int64",
+        "SiteKey": "int64",
+        "Timestamp": "object",
+        "SolarGeneration": "float64"
+      },
+      "head_5": [
+        {
+          "CampusKey": 2,
+          "SiteKey": 1,
+          "Timestamp": "2020-01-01 00:15:00",
+          "SolarGeneration": null
+        },
+        {
+          "CampusKey": 2,
+          "SiteKey": 1,
+          "Timestamp": "2020-01-01 00:30:00",
+          "SolarGeneration": null
+        },
+        {
+          "CampusKey": 2,
+          "SiteKey": 1,
+          "Timestamp": "2020-01-01 00:45:00",
+          "SolarGeneration": null
+        },
+        {
+          "CampusKey": 2,
+          "SiteKey": 1,
+          "Timestamp": "2020-01-01 01:00:00",
+          "SolarGeneration": null
+        },
+        {
+          "CampusKey": 2,
+          "SiteKey": 1,
+          "Timestamp": "2020-01-01 01:15:00",
+          "SolarGeneration": null
+        }
+      ],
+      "tail_5": [
+        {
+          "CampusKey": 5,
+          "SiteKey": 42,
+          "Timestamp": "2022-04-23 22:45:00",
+          "SolarGeneration": null
+        },
+        {
+          "CampusKey": 5,
+          "SiteKey": 42,
+          "Timestamp": "2022-04-23 23:00:00",
+          "SolarGeneration": null
+        },
+        {
+          "CampusKey": 5,
+          "SiteKey": 42,
+          "Timestamp": "2022-04-23 23:15:00",
+          "SolarGeneration": null
+        },
+        {
+          "CampusKey": 5,
+          "SiteKey": 42,
+          "Timestamp": "2022-04-23 23:30:00",
+          "SolarGeneration": null
+        },
+        {
+          "CampusKey": 5,
+          "SiteKey": 42,
+          "Timestamp": "2022-04-23 23:45:00",
+          "SolarGeneration": null
+        }
+      ],
+      "timestamp_columns": {
+        "Timestamp": {
+          "parse_success_rate": 1.0,
+          "matched_by_name": true,
+          "min": "2020-01-01 00:15:00",
+          "max": "2022-04-23 23:45:00",
+          "dtype": "datetime64"
+        }
+      },
+      "primary_timestamp_column": "Timestamp",
+      "grouping_column": "SiteKey",
+      "site_id_candidates": {
+        "CampusKey": {
+          "unique_values": 5,
+          "matched_by_name": false,
+          "matched_by_id_suffix": true,
+          "plausible_id_column": true,
+          "sample_values": [
+            2,
+            3,
+            1,
+            4,
+            5
+          ]
+        },
+        "SiteKey": {
+          "unique_values": 42,
+          "matched_by_name": true,
+          "matched_by_id_suffix": true,
+          "plausible_id_column": true,
+          "sample_values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        }
+      },
+      "target_candidates": {
+        "SolarGeneration": {
+          "matched_keyword": "Generation",
+          "dtype": "float64",
+          "min": 0.1000000000058207,
+          "max": 99.21879999997329,
+          "mean": 6.944463381388671,
+          "zero_fraction": 0.0
+        }
+      },
+      "missing_percentage": {
+        "CampusKey": 0.0,
+        "SiteKey": 0.0,
+        "Timestamp": 0.0,
+        "SolarGeneration": 56.235
+      },
+      "categorical_summary": {
+        "CampusKey": {
+          "n_unique": 5,
+          "value_counts": {
+            "1": 1720219,
+            "3": 520702,
+            "2": 332387,
+            "4": 79319,
+            "5": 79319
+          }
+        },
+        "SiteKey": {
+          "n_unique": 42,
+          "value_counts": {
+            "27": 79805,
+            "1": 79319,
+            "3": 79319,
+            "10": 79319,
+            "9": 79319,
+            "7": 79319,
+            "42": 79319,
+            "41": 79319,
+            "12": 79319,
+            "2": 79319,
+            "13": 77303,
+            "35": 72604,
+            "34": 72316,
+            "15": 65020,
+            "38": 64252,
+            "37": 64252,
+            "40": 64252,
+            "36": 64252,
+            "26": 64252,
+            "31": 64252,
+            "33": 64252,
+            "17": 64252,
+            "24": 64252,
+            "22": 64252,
+            "21": 64252,
+            "20": 64252,
+            "32": 64252,
+            "14": 63964,
+            "19": 62908,
+            "25": 62908,
+            "18": 61843,
+            "29": 60403,
+            "28": 59948,
+            "23": 58700,
+            "30": 58700,
+            "39": 58700,
+            "5": 47215,
+            "4": 47215,
+            "16": 47124,
+            "6": 42041,
+            "8": 42041,
+            "11": 42041
+          }
+        }
+      },
+      "sampling_frequency": {
+        "grouped_by": true,
+        "median_interval": "0 days 00:15:00",
+        "mode_interval": "0 days 00:15:00",
+        "mode_interval_share": 0.9998,
+        "irregular_gap_fraction": 0.0002,
+        "max_gap": "4 days 00:15:00",
+        "min_gap": "0 days 00:15:00",
+        "per_group_mode_intervals": {
+          "1": "0 days 00:15:00",
+          "2": "0 days 00:15:00",
+          "3": "0 days 00:15:00",
+          "4": "0 days 00:15:00",
+          "5": "0 days 00:15:00",
+          "6": "0 days 00:15:00",
+          "7": "0 days 00:15:00",
+          "8": "0 days 00:15:00",
+          "9": "0 days 00:15:00",
+          "10": "0 days 00:15:00",
+          "11": "0 days 00:15:00",
+          "12": "0 days 00:15:00",
+          "13": "0 days 00:15:00",
+          "14": "0 days 00:15:00",
+          "15": "0 days 00:15:00",
+          "16": "0 days 00:15:00",
+          "17": "0 days 00:15:00",
+          "18": "0 days 00:15:00",
+          "19": "0 days 00:15:00",
+          "20": "0 days 00:15:00",
+          "21": "0 days 00:15:00",
+          "22": "0 days 00:15:00",
+          "23": "0 days 00:15:00",
+          "24": "0 days 00:15:00",
+          "25": "0 days 00:15:00",
+          "26": "0 days 00:15:00",
+          "27": "0 days 00:15:00",
+          "28": "0 days 00:15:00",
+          "29": "0 days 00:15:00",
+          "30": "0 days 00:15:00",
+          "31": "0 days 00:15:00",
+          "32": "0 days 00:15:00",
+          "33": "0 days 00:15:00",
+          "34": "0 days 00:15:00",
+          "35": "0 days 00:15:00",
+          "36": "0 days 00:15:00",
+          "37": "0 days 00:15:00",
+          "38": "0 days 00:15:00",
+          "39": "0 days 00:15:00",
+          "40": "0 days 00:15:00",
+          "41": "0 days 00:15:00",
+          "42": "0 days 00:15:00"
+        }
+      },
+      "duplicates": {
+        "fully_duplicated_rows": 0,
+        "total_rows": 2731946,
+        "duplicated_timestamp_values_within_group": 0,
+        "duplicated_keys": {
+          "SiteKey+Timestamp": 0
+        }
+      },
+      "unit_metadata_in_names": {},
+      "memory_usage_mb": 251.34
+    },
+    {
+      "file": "unisolar\\Solar_Site_Details.csv",
+      "size_bytes": 3042,
+      "format": "csv",
+      "shape": {
+        "rows": 42,
+        "columns": 10
+      },
+      "columns": [
+        "CampusKey",
+        "SiteKey",
+        "kWp",
+        "Number of panels",
+        "Panel",
+        "Inverter",
+        "Optimizers",
+        "Metric",
+        "lat",
+        "Lon"
+      ],
+      "dtypes": {
+        "CampusKey": "int64",
+        "SiteKey": "int64",
+        "kWp": "float64",
+        "Number of panels": "float64",
+        "Panel": "object",
+        "Inverter": "object",
+        "Optimizers": "object",
+        "Metric": "object",
+        "lat": "float64",
+        "Lon": "float64"
+      },
+      "head_5": [
+        {
+          "CampusKey": 2,
+          "SiteKey": 1,
+          "kWp": null,
+          "Number of panels": null,
+          "Panel": null,
+          "Inverter": null,
+          "Optimizers": null,
+          "Metric": null,
+          "lat": -36.11120917,
+          "Lon": 146.8486788
+        },
+        {
+          "CampusKey": 2,
+          "SiteKey": 2,
+          "kWp": null,
+          "Number of panels": null,
+          "Panel": null,
+          "Inverter": null,
+          "Optimizers": null,
+          "Metric": null,
+          "lat": -36.11120917,
+          "Lon": 146.8486788
+        },
+        {
+          "CampusKey": 2,
+          "SiteKey": 3,
+          "kWp": null,
+          "Number of panels": null,
+          "Panel": null,
+          "Inverter": null,
+          "Optimizers": null,
+          "Metric": null,
+          "lat": -36.11120917,
+          "Lon": 146.8486788
+        },
+        {
+          "CampusKey": 2,
+          "SiteKey": 4,
+          "kWp": null,
+          "Number of panels": null,
+          "Panel": null,
+          "Inverter": null,
+          "Optimizers": null,
+          "Metric": null,
+          "lat": -36.11120917,
+          "Lon": 146.8486788
+        },
+        {
+          "CampusKey": 2,
+          "SiteKey": 5,
+          "kWp": null,
+          "Number of panels": null,
+          "Panel": null,
+          "Inverter": null,
+          "Optimizers": null,
+          "Metric": null,
+          "lat": -36.11120917,
+          "Lon": 146.8486788
+        }
+      ],
+      "tail_5": [
+        {
+          "CampusKey": 1,
+          "SiteKey": 38,
+          "kWp": 56.76,
+          "Number of panels": 172.0,
+          "Panel": "Trina 330W",
+          "Inverter": "1 x SolarEdge SE50K",
+          "Optimizers": "86 x P730",
+          "Metric": "kWh",
+          "lat": -37.71828652,
+          "Lon": 145.0509752
+        },
+        {
+          "CampusKey": 1,
+          "SiteKey": 39,
+          "kWp": 47.74,
+          "Number of panels": 154.0,
+          "Panel": "Trina 310W",
+          "Inverter": "1 x SolarEdge SE25K + 1 x SolarEdge SE15K",
+          "Optimizers": "77 x P700",
+          "Metric": "kWh",
+          "lat": -37.71828652,
+          "Lon": 145.0509752
+        },
+        {
+          "CampusKey": 1,
+          "SiteKey": 40,
+          "kWp": 84.81,
+          "Number of panels": 257.0,
+          "Panel": "Trina 330W",
+          "Inverter": "1 x SolarEdge SE82.8K",
+          "Optimizers": "129 x P730",
+          "Metric": "kWh",
+          "lat": -37.71828652,
+          "Lon": 145.0509752
+        },
+        {
+          "CampusKey": 4,
+          "SiteKey": 41,
+          "kWp": null,
+          "Number of panels": null,
+          "Panel": null,
+          "Inverter": null,
+          "Optimizers": null,
+          "Metric": null,
+          "lat": -34.20528877,
+          "Lon": 142.166556
+        },
+        {
+          "CampusKey": 5,
+          "SiteKey": 42,
+          "kWp": null,
+          "Number of panels": null,
+          "Panel": null,
+          "Inverter": null,
+          "Optimizers": null,
+          "Metric": null,
+          "lat": -36.38031889,
+          "Lon": 145.4062897
+        }
+      ],
+      "timestamp_columns": {},
+      "primary_timestamp_column": null,
+      "grouping_column": "SiteKey",
+      "site_id_candidates": {
+        "CampusKey": {
+          "unique_values": 5,
+          "matched_by_name": false,
+          "matched_by_id_suffix": true,
+          "plausible_id_column": true,
+          "sample_values": [
+            2,
+            3,
+            1,
+            4,
+            5
+          ]
+        },
+        "SiteKey": {
+          "unique_values": 42,
+          "matched_by_name": true,
+          "matched_by_id_suffix": true,
+          "plausible_id_column": true,
+          "sample_values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        "Panel": {
+          "unique_values": 4,
+          "matched_by_name": false,
+          "matched_by_id_suffix": false,
+          "plausible_id_column": false,
+          "sample_values": [
+            "Trina 330W",
+            "Trina 310W",
+            "TBD",
+            "SunpowerSPR-E20-435-COM"
+          ]
+        },
+        "Inverter": {
+          "unique_values": 17,
+          "matched_by_name": false,
+          "matched_by_id_suffix": false,
+          "plausible_id_column": false,
+          "sample_values": [
+            "2 x SolarEdge SE27.6K",
+            "1 x SolarEdge SE82.8K",
+            "SMA",
+            "1 x SolarEdge SE25K + 1 x SolarEdge SE15K",
+            "3 x SolarEdge SE50K",
+            "1 x SolarEdge SE27.6K",
+            "2 x SolarEdge SE25K + 1 x SolarEdge SE15K",
+            "2 x SolarEdge SE17K",
+            "1 x SolarEdge SE50K",
+            "4 x SolarEdge SE82.8K"
+          ]
+        },
+        "Optimizers": {
+          "unique_values": 22,
+          "matched_by_name": false,
+          "matched_by_id_suffix": false,
+          "plausible_id_column": false,
+          "sample_values": [
+            "100 x P730",
+            "152 x P700",
+            "77 x P730",
+            "255 x P730",
+            "53 x P700",
+            "117 x P730",
+            "61 x P730",
+            "110 x P730",
+            "97 x P700",
+            "584 x P730"
+          ]
+        },
+        "Metric": {
+          "unique_values": 1,
+          "matched_by_name": false,
+          "matched_by_id_suffix": false,
+          "plausible_id_column": false,
+          "sample_values": [
+            "kWh"
+          ]
+        }
+      },
+      "target_candidates": {},
+      "missing_percentage": {
+        "CampusKey": 0.0,
+        "SiteKey": 0.0,
+        "kWp": 40.476,
+        "Number of panels": 40.476,
+        "Panel": 40.476,
+        "Inverter": 40.476,
+        "Optimizers": 45.238,
+        "Metric": 40.476,
+        "lat": 0.0,
+        "Lon": 0.0
+      },
+      "categorical_summary": {
+        "CampusKey": {
+          "n_unique": 5,
+          "value_counts": {
+            "1": 27,
+            "3": 8,
+            "2": 5,
+            "4": 1,
+            "5": 1
+          }
+        },
+        "SiteKey": {
+          "n_unique": 42,
+          "value_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1,
+            "5": 1,
+            "6": 1,
+            "7": 1,
+            "8": 1,
+            "9": 1,
+            "10": 1,
+            "11": 1,
+            "12": 1,
+            "13": 1,
+            "14": 1,
+            "15": 1,
+            "16": 1,
+            "17": 1,
+            "18": 1,
+            "19": 1,
+            "20": 1,
+            "21": 1,
+            "22": 1,
+            "23": 1,
+            "24": 1,
+            "25": 1,
+            "26": 1,
+            "27": 1,
+            "28": 1,
+            "29": 1,
+            "30": 1,
+            "31": 1,
+            "32": 1,
+            "33": 1,
+            "34": 1,
+            "35": 1,
+            "36": 1,
+            "37": 1,
+            "38": 1,
+            "39": 1,
+            "40": 1,
+            "41": 1,
+            "42": 1
+          }
+        },
+        "kWp": {
+          "n_unique": 25,
+          "value_counts": {
+            "null": 17,
+            "66.0": 1,
+            "94.24": 1,
+            "30.0": 1,
+            "45.26": 1,
+            "167.97": 1,
+            "34.32": 1,
+            "77.22": 1,
+            "39.27": 1,
+            "72.27": 1,
+            "58.9": 1,
+            "40.26": 1,
+            "384.12": 1,
+            "38.94": 1,
+            "539.8": 1,
+            "42.16": 1,
+            "76.23": 1,
+            "35.64": 1,
+            "87.78": 1,
+            "21.39": 1,
+            "29.45": 1,
+            "49.83": 1,
+            "51.15": 1,
+            "56.76": 1,
+            "47.74": 1,
+            "84.81": 1
+          }
+        },
+        "Number of panels": {
+          "n_unique": 25,
+          "value_counts": {
+            "null": 17,
+            "200.0": 1,
+            "304.0": 1,
+            "115.38": 1,
+            "146.0": 1,
+            "509.0": 1,
+            "104.0": 1,
+            "234.0": 1,
+            "119.0": 1,
+            "219.0": 1,
+            "190.0": 1,
+            "122.0": 1,
+            "1164.0": 1,
+            "118.0": 1,
+            "1240.92": 1,
+            "136.0": 1,
+            "231.0": 1,
+            "108.0": 1,
+            "266.0": 1,
+            "69.0": 1,
+            "95.0": 1,
+            "151.0": 1,
+            "155.0": 1,
+            "172.0": 1,
+            "154.0": 1,
+            "257.0": 1
+          }
+        },
+        "Panel": {
+          "n_unique": 4,
+          "value_counts": {
+            "null": 17,
+            "Trina 330W": 16,
+            "Trina 310W": 7,
+            "TBD": 1,
+            "SunpowerSPR-E20-435-COM": 1
+          }
+        },
+        "Inverter": {
+          "n_unique": 17,
+          "value_counts": {
+            "null": 17,
+            "1 x SolarEdge SE82.8K": 5,
+            "1 x SolarEdge SE50K": 2,
+            "1 x SolarEdge SE25K + 1 x SolarEdge SE15K": 2,
+            "2 x SolarEdge SE17K": 2,
+            "2 x SolarEdge SE25K + 1 x SolarEdge SE15K": 2,
+            "2 x SolarEdge SE27.6K": 1,
+            "SMA": 1,
+            "3 x SolarEdge SE50K": 1,
+            "1 x SolarEdge SE27.6K": 1,
+            "4 x SolarEdge SE82.8K": 1,
+            "1 x SolarEdge SE17K + 1 x SolarEdge SE15K": 1,
+            "5 X ABB": 1,
+            "2 x SolarEdge SE15K": 1,
+            "1 x SolarEdge SE17K": 1,
+            "1 x SolarEdge SE25K": 1,
+            "1 x SolarEdge SE27.6K + 1 x SolarEdge SE15K": 1,
+            "1 x SolarEdge SE25K + 1 x SolarEdge SE17K": 1
+          }
+        },
+        "Optimizers": {
+          "n_unique": 22,
+          "value_counts": {
+            "null": 19,
+            "61 x P730": 2,
+            "100 x P730": 1,
+            "77 x P730": 1,
+            "255 x P730": 1,
+            "53 x P700": 1,
+            "152 x P700": 1,
+            "117 x P730": 1,
+            "110 x P730": 1,
+            "97 x P700": 1,
+            "584 x P730": 1,
+            "59 x P730": 1,
+            "74 x P700": 1,
+            "116 x P730": 1,
+            "58 x P730": 1,
+            "133 x P730": 1,
+            "35 x P700": 1,
+            "48 x P700": 1,
+            "76 x P730": 1,
+            "78 x P730": 1,
+            "86 x P730": 1,
+            "77 x P700": 1,
+            "129 x P730": 1
+          }
+        },
+        "Metric": {
+          "n_unique": 1,
+          "value_counts": {
+            "kWh": 25,
+            "null": 17
+          }
+        },
+        "lat": {
+          "n_unique": 5,
+          "value_counts": {
+            "-37.71828652": 27,
+            "-36.77885832": 8,
+            "-36.11120917": 5,
+            "-34.20528877": 1,
+            "-36.38031889": 1
+          }
+        },
+        "Lon": {
+          "n_unique": 5,
+          "value_counts": {
+            "145.0509752": 27,
+            "144.3012321": 8,
+            "146.8486788": 5,
+            "142.166556": 1,
+            "145.4062897": 1
+          }
+        }
+      },
+      "sampling_frequency": {},
+      "duplicates": {
+        "fully_duplicated_rows": 0,
+        "total_rows": 42
+      },
+      "unit_metadata_in_names": {},
+      "memory_usage_mb": 0.01
+    },
+    {
+      "file": "unisolar\\Weather_Data_reordered_all.csv",
+      "size_bytes": 22535132,
+      "format": "csv",
+      "shape": {
+        "rows": 371769,
+        "columns": 8
+      },
+      "columns": [
+        "CampusKey",
+        "Timestamp",
+        "ApparentTemperature",
+        "AirTemperature",
+        "DewPointTemperature",
+        "RelativeHumidity",
+        "WindSpeed",
+        "WindDirection"
+      ],
+      "dtypes": {
+        "CampusKey": "int64",
+        "Timestamp": "object",
+        "ApparentTemperature": "float64",
+        "AirTemperature": "float64",
+        "DewPointTemperature": "float64",
+        "RelativeHumidity": "float64",
+        "WindSpeed": "float64",
+        "WindDirection": "float64"
+      },
+      "head_5": [
+        {
+          "CampusKey": 1,
+          "Timestamp": "2020-01-01 00:00:00",
+          "ApparentTemperature": 13.66666667,
+          "AirTemperature": 13.88,
+          "DewPointTemperature": 8.96,
+          "RelativeHumidity": 72.4,
+          "WindSpeed": 0.0,
+          "WindDirection": 188.1333333
+        },
+        {
+          "CampusKey": 1,
+          "Timestamp": "2020-01-01 00:15:00",
+          "ApparentTemperature": 13.20666667,
+          "AirTemperature": 13.66666667,
+          "DewPointTemperature": 9.04,
+          "RelativeHumidity": 73.46666667,
+          "WindSpeed": 1.2,
+          "WindDirection": 203.8666667
+        },
+        {
+          "CampusKey": 1,
+          "Timestamp": "2020-01-01 00:30:00",
+          "ApparentTemperature": 12.84,
+          "AirTemperature": 13.55333333,
+          "DewPointTemperature": 9.053333333,
+          "RelativeHumidity": 74.0,
+          "WindSpeed": 2.52,
+          "WindDirection": 222.8
+        },
+        {
+          "CampusKey": 1,
+          "Timestamp": "2020-01-01 00:45:00",
+          "ApparentTemperature": 12.11333333,
+          "AirTemperature": 13.50666667,
+          "DewPointTemperature": 9.1,
+          "RelativeHumidity": 74.46666667,
+          "WindSpeed": 5.986666667000001,
+          "WindDirection": 231.1333333
+        },
+        {
+          "CampusKey": 1,
+          "Timestamp": "2020-01-01 01:00:00",
+          "ApparentTemperature": 11.94666667,
+          "AirTemperature": 13.26,
+          "DewPointTemperature": 9.266666667,
+          "RelativeHumidity": 76.53333333,
+          "WindSpeed": 5.946666667000001,
+          "WindDirection": 247.8666667
+        }
+      ],
+      "tail_5": [
+        {
+          "CampusKey": 5,
+          "Timestamp": "2022-04-23 21:00:00",
+          "ApparentTemperature": 12.8,
+          "AirTemperature": 14.4,
+          "DewPointTemperature": 11.7,
+          "RelativeHumidity": 84.0,
+          "WindSpeed": null,
+          "WindDirection": null
+        },
+        {
+          "CampusKey": 5,
+          "Timestamp": "2022-04-23 21:15:00",
+          "ApparentTemperature": null,
+          "AirTemperature": null,
+          "DewPointTemperature": null,
+          "RelativeHumidity": null,
+          "WindSpeed": null,
+          "WindDirection": null
+        },
+        {
+          "CampusKey": 5,
+          "Timestamp": "2022-04-23 21:30:00",
+          "ApparentTemperature": 12.6,
+          "AirTemperature": 14.2,
+          "DewPointTemperature": 11.5,
+          "RelativeHumidity": 84.0,
+          "WindSpeed": null,
+          "WindDirection": null
+        },
+        {
+          "CampusKey": 5,
+          "Timestamp": "2022-04-23 21:45:00",
+          "ApparentTemperature": null,
+          "AirTemperature": null,
+          "DewPointTemperature": null,
+          "RelativeHumidity": null,
+          "WindSpeed": null,
+          "WindDirection": null
+        },
+        {
+          "CampusKey": 5,
+          "Timestamp": "2022-04-23 22:00:00",
+          "ApparentTemperature": 12.1,
+          "AirTemperature": 13.7,
+          "DewPointTemperature": 11.4,
+          "RelativeHumidity": 86.0,
+          "WindSpeed": null,
+          "WindDirection": null
+        }
+      ],
+      "timestamp_columns": {
+        "Timestamp": {
+          "parse_success_rate": 1.0,
+          "matched_by_name": true,
+          "min": "2020-01-01 00:00:00",
+          "max": "2022-04-23 22:00:00",
+          "dtype": "datetime64"
+        }
+      },
+      "primary_timestamp_column": "Timestamp",
+      "grouping_column": "CampusKey",
+      "site_id_candidates": {
+        "CampusKey": {
+          "unique_values": 5,
+          "matched_by_name": false,
+          "matched_by_id_suffix": true,
+          "plausible_id_column": true,
+          "sample_values": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      },
+      "target_candidates": {},
+      "missing_percentage": {
+        "CampusKey": 0.0,
+        "Timestamp": 0.0,
+        "ApparentTemperature": 28.812,
+        "AirTemperature": 28.812,
+        "DewPointTemperature": 28.812,
+        "RelativeHumidity": 28.812,
+        "WindSpeed": 43.815,
+        "WindDirection": 43.815
+      },
+      "categorical_summary": {
+        "CampusKey": {
+          "n_unique": 5,
+          "value_counts": {
+            "1": 81017,
+            "2": 81017,
+            "3": 81017,
+            "4": 81017,
+            "5": 47701
+          }
+        }
+      },
+      "sampling_frequency": {
+        "grouped_by": true,
+        "median_interval": "0 days 00:15:00",
+        "mode_interval": "0 days 00:15:00",
+        "mode_interval_share": 1.0,
+        "irregular_gap_fraction": 0.0,
+        "max_gap": "0 days 00:15:00",
+        "min_gap": "0 days 00:15:00",
+        "per_group_mode_intervals": {
+          "1": "0 days 00:15:00",
+          "2": "0 days 00:15:00",
+          "3": "0 days 00:15:00",
+          "4": "0 days 00:15:00",
+          "5": "0 days 00:15:00"
+        }
+      },
+      "duplicates": {
+        "fully_duplicated_rows": 0,
+        "total_rows": 371769,
+        "duplicated_timestamp_values_within_group": 0,
+        "duplicated_keys": {
+          "CampusKey+Timestamp": 0
+        }
+      },
+      "unit_metadata_in_names": {},
+      "memory_usage_mb": 46.1
+    }
+  ],
+  "_notes": [
+    "Detections are heuristic candidates, not verified facts.",
+    "License/usage terms must still be confirmed manually (PRD \u00a75.1)."
+  ]
+}

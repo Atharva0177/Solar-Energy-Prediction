@@ -1,0 +1,225 @@
+{
+  "generated_at": "2026-08-24T08:18:28+00:00",
+  "generated_by": "scripts/build_features.py",
+  "source": "data\\processed\\solar",
+  "output": "data\\processed\\features",
+  "n_rows": 2731946,
+  "n_columns_total": 51,
+  "cadence_minutes": 15,
+  "timezone": "Australia/Melbourne",
+  "target": {
+    "column": "power",
+    "imputed": false
+  },
+  "engineered_columns": [
+    "hour",
+    "minute",
+    "day",
+    "day_of_week",
+    "day_of_year",
+    "week_of_year",
+    "quarter",
+    "season",
+    "is_weekend",
+    "sin_hour",
+    "cos_hour",
+    "sin_day_of_year",
+    "cos_day_of_year",
+    "power_lag_1",
+    "power_lag_2",
+    "power_lag_4",
+    "power_lag_8",
+    "power_lag_24",
+    "power_lag_48",
+    "power_lag_96",
+    "power_rolling_mean_3600s",
+    "power_rolling_std_3600s",
+    "power_rolling_min_3600s",
+    "power_rolling_max_3600s",
+    "power_rolling_mean_21600s",
+    "power_rolling_std_21600s",
+    "power_rolling_min_21600s",
+    "power_rolling_max_21600s",
+    "power_rolling_mean_86400s",
+    "power_rolling_std_86400s",
+    "power_rolling_min_86400s",
+    "power_rolling_max_86400s",
+    "wind_dir_sin",
+    "wind_dir_cos",
+    "azimuth_deg",
+    "zenith_deg",
+    "day_length_hours"
+  ],
+  "n_engineered_columns": 37,
+  "feature_families": [
+    {
+      "family": "temporal",
+      "prd_section": 15,
+      "columns": [
+        "hour",
+        "minute",
+        "day",
+        "day_of_week",
+        "day_of_year",
+        "week_of_year",
+        "month",
+        "quarter",
+        "season",
+        "is_weekend",
+        "sin_hour",
+        "cos_hour",
+        "sin_day_of_year",
+        "cos_day_of_year"
+      ],
+      "config": {
+        "season_convention": "southern_hemisphere_meteorological",
+        "cyclical": [
+          "sin_hour",
+          "cos_hour",
+          "sin_day_of_year",
+          "cos_day_of_year"
+        ]
+      }
+    },
+    {
+      "family": "lags",
+      "prd_section": 16,
+      "columns": [
+        "power_lag_1",
+        "power_lag_2",
+        "power_lag_4",
+        "power_lag_8",
+        "power_lag_24",
+        "power_lag_48",
+        "power_lag_96"
+      ],
+      "config": {
+        "lag_steps_15min": [
+          1,
+          2,
+          4,
+          8,
+          24,
+          48,
+          96
+        ],
+        "alignment": "calendar_exact_by_timestamp_not_positional",
+        "missing_prior_observation": "nan_never_zero"
+      }
+    },
+    {
+      "family": "rolling",
+      "prd_section": 17,
+      "columns": [
+        "power_rolling_mean_3600s",
+        "power_rolling_std_3600s",
+        "power_rolling_min_3600s",
+        "power_rolling_max_3600s",
+        "power_rolling_mean_21600s",
+        "power_rolling_std_21600s",
+        "power_rolling_min_21600s",
+        "power_rolling_max_21600s",
+        "power_rolling_mean_86400s",
+        "power_rolling_std_86400s",
+        "power_rolling_min_86400s",
+        "power_rolling_max_86400s"
+      ],
+      "config": {
+        "windows_seconds": [
+          3600,
+          21600,
+          86400
+        ],
+        "stats": [
+          "mean",
+          "std",
+          "min",
+          "max"
+        ],
+        "closed": "left_interval_t_minus_W_to_t",
+        "min_periods": 1,
+        "per_site": true
+      }
+    },
+    {
+      "family": "weather",
+      "prd_section": 19,
+      "passthrough_columns": [
+        "temperature",
+        "apparent_temperature",
+        "dew_point_temperature",
+        "humidity",
+        "wind_speed",
+        "wind_direction"
+      ],
+      "derived_columns": [
+        "wind_dir_sin",
+        "wind_dir_cos"
+      ],
+      "config": {
+        "dynamic_to_available_variables": true
+      }
+    },
+    {
+      "family": "solar_position",
+      "prd_section": 18,
+      "columns": [
+        "solar_elevation_deg",
+        "azimuth_deg",
+        "zenith_deg",
+        "day_length_hours",
+        "is_daylight"
+      ],
+      "config": {
+        "library": "pvlib apparent solar position",
+        "coordinates_grain": "campus (5 pairs for 42 sites)",
+        "day_length_definition": "count of >0-degree-elevation 15-min grid slots per civil date * 0.25h"
+      }
+    }
+  ],
+  "missing_pct_engineered": {
+    "hour": 0.0,
+    "minute": 0.0,
+    "day": 0.0,
+    "day_of_week": 0.0,
+    "day_of_year": 0.0,
+    "week_of_year": 0.0,
+    "quarter": 0.0,
+    "season": 0.0,
+    "is_weekend": 0.0,
+    "sin_hour": 0.0,
+    "cos_hour": 0.0,
+    "sin_day_of_year": 0.0,
+    "cos_day_of_year": 0.0,
+    "power_lag_1": 56.24,
+    "power_lag_2": 56.25,
+    "power_lag_4": 56.26,
+    "power_lag_8": 56.29,
+    "power_lag_24": 56.41,
+    "power_lag_48": 56.63,
+    "power_lag_96": 56.96,
+    "power_rolling_mean_3600s": 51.27,
+    "power_rolling_std_3600s": 54.2,
+    "power_rolling_min_3600s": 51.27,
+    "power_rolling_max_3600s": 51.27,
+    "power_rolling_mean_21600s": 29.98,
+    "power_rolling_std_21600s": 32.5,
+    "power_rolling_min_21600s": 29.98,
+    "power_rolling_max_21600s": 29.98,
+    "power_rolling_mean_86400s": 1.82,
+    "power_rolling_std_86400s": 1.97,
+    "power_rolling_min_86400s": 1.82,
+    "power_rolling_max_86400s": 1.82,
+    "wind_dir_sin": 43.25,
+    "wind_dir_cos": 43.25,
+    "azimuth_deg": 0.02,
+    "zenith_deg": 0.02,
+    "day_length_hours": 0.07
+  },
+  "leakage_notes": [
+    "lags read only strictly older timestamps (calendar-exact, per site)",
+    "rolling windows closed='left' -> interval [t-W, t), current obs excluded",
+    "temporal features are pure functions of the timestamp",
+    "power target untouched; NaN never imputed (D-008)"
+  ]
+}

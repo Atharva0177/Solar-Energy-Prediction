@@ -1,0 +1,25 @@
+# Training protocol (PRD §11, §43). Ratios feed the canonical per-site
+# chronological split (D-011); horizons are in 15-min steps (§13 adapted to
+# the verified cadence).
+
+training:
+  seed: 42
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  early_stopping_rounds: 100
+  horizons_steps_15min: [1]
+
+# Cross-site protocol (PRD §12, Phase 9): site counts are round(n_sites *
+# frac), min 1 — 42 sites → 6 held-out val + 6 held-out test sites.
+cross_site:
+  val_site_frac: 0.15
+  test_site_frac: 0.15
+
+forecast:
+  cadence_minutes: 15
+
+paths:
+  features_dir: data/processed/features
+  processed_dir: data/processed/solar
+  site_details: data/processed/site_details.parquet

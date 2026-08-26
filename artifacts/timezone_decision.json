@@ -1,0 +1,19 @@
+{
+  "chosen_timezone": "Australia/Melbourne",
+  "candidates": {
+    "Etc/GMT-10": {
+      "day_mean_power": 7.2247,
+      "night_mean_power_observed": 0.8298,
+      "night_nonzero_fraction": 0.0343,
+      "contrast_ratio": 8.71,
+      "ambiguous_nat_rows": 0
+    },
+    "Australia/Melbourne": {
+      "day_mean_power": 6.9878,
+      "night_mean_power_observed": 0.3649,
+      "night_nonzero_fraction": 0.0012,
+      "contrast_ratio": 19.15,
+      "ambiguous_nat_rows": 56
+    }
+  }
+}

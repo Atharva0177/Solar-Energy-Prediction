@@ -1,0 +1,265 @@
+{
+ "explained_run": "xgboost-site-all-h1-v1",
+ "sample_rows": 20000,
+ "additivity_max_abs_err": 6.866455078125e-05,
+ "features": [
+  {
+   "rank": 1,
+   "feature": "power_lag_1",
+   "mean_abs_shap": 3.1343,
+   "share": 0.38611794
+  },
+  {
+   "rank": 2,
+   "feature": "power_rolling_mean_3600s",
+   "mean_abs_shap": 2.0745,
+   "share": 0.25555912
+  },
+  {
+   "rank": 3,
+   "feature": "power_rolling_min_3600s",
+   "mean_abs_shap": 0.3556,
+   "share": 0.043812487
+  },
+  {
+   "rank": 4,
+   "feature": "sin_hour",
+   "mean_abs_shap": 0.3448,
+   "share": 0.042471822
+  },
+  {
+   "rank": 5,
+   "feature": "solar_elevation_deg",
+   "mean_abs_shap": 0.256,
+   "share": 0.03153992
+  },
+  {
+   "rank": 6,
+   "feature": "site_id",
+   "mean_abs_shap": 0.2186,
+   "share": 0.026933696
+  },
+  {
+   "rank": 7,
+   "feature": "hour",
+   "mean_abs_shap": 0.1878,
+   "share": 0.023131922
+  },
+  {
+   "rank": 8,
+   "feature": "power_rolling_max_3600s",
+   "mean_abs_shap": 0.1851,
+   "share": 0.022802496
+  },
+  {
+   "rank": 9,
+   "feature": "zenith_deg",
+   "mean_abs_shap": 0.1739,
+   "share": 0.021421202
+  },
+  {
+   "rank": 10,
+   "feature": "power_rolling_min_21600s",
+   "mean_abs_shap": 0.1528,
+   "share": 0.018822184
+  },
+  {
+   "rank": 11,
+   "feature": "power_lag_96",
+   "mean_abs_shap": 0.1247,
+   "share": 0.015367231
+  },
+  {
+   "rank": 12,
+   "feature": "power_rolling_std_21600s",
+   "mean_abs_shap": 0.112,
+   "share": 0.013800548
+  },
+  {
+   "rank": 13,
+   "feature": "power_rolling_max_21600s",
+   "mean_abs_shap": 0.1074,
+   "share": 0.013225469
+  },
+  {
+   "rank": 14,
+   "feature": "power_rolling_mean_21600s",
+   "mean_abs_shap": 0.0968,
+   "share": 0.011920237
+  },
+  {
+   "rank": 15,
+   "feature": "power_lag_8",
+   "mean_abs_shap": 0.0746,
+   "share": 0.0091851875
+  },
+  {
+   "rank": 16,
+   "feature": "power_rolling_max_86400s",
+   "mean_abs_shap": 0.067,
+   "share": 0.008258055
+  },
+  {
+   "rank": 17,
+   "feature": "power_lag_2",
+   "mean_abs_shap": 0.0578,
+   "share": 0.007123068
+  },
+  {
+   "rank": 18,
+   "feature": "azimuth_deg",
+   "mean_abs_shap": 0.0482,
+   "share": 0.005932237
+  },
+  {
+   "rank": 19,
+   "feature": "cos_hour",
+   "mean_abs_shap": 0.0465,
+   "share": 0.0057308245
+  },
+  {
+   "rank": 20,
+   "feature": "power_rolling_mean_86400s",
+   "mean_abs_shap": 0.0432,
+   "share": 0.0053158686
+  },
+  {
+   "rank": 21,
+   "feature": "humidity",
+   "mean_abs_shap": 0.0426,
+   "share": 0.0052475417
+  },
+  {
+   "rank": 22,
+   "feature": "power_rolling_std_86400s",
+   "mean_abs_shap": 0.0374,
+   "share": 0.004606964
+  },
+  {
+   "rank": 23,
+   "feature": "power_lag_4",
+   "mean_abs_shap": 0.0249,
+   "share": 0.0030685023
+  },
+  {
+   "rank": 24,
+   "feature": "wind_dir_cos",
+   "mean_abs_shap": 0.0207,
+   "share": 0.0025470585
+  },
+  {
+   "rank": 25,
+   "feature": "power_rolling_std_3600s",
+   "mean_abs_shap": 0.0192,
+   "share": 0.002360199
+  },
+  {
+   "rank": 26,
+   "feature": "temperature",
+   "mean_abs_shap": 0.0191,
+   "share": 0.0023511779
+  },
+  {
+   "rank": 27,
+   "feature": "power_lag_24",
+   "mean_abs_shap": 0.016,
+   "share": 0.0019692436
+  },
+  {
+   "rank": 28,
+   "feature": "dew_point_temperature",
+   "mean_abs_shap": 0.0137,
+   "share": 0.0016823036
+  },
+  {
+   "rank": 29,
+   "feature": "apparent_temperature",
+   "mean_abs_shap": 0.0106,
+   "share": 0.0013051016
+  },
+  {
+   "rank": 30,
+   "feature": "wind_speed",
+   "mean_abs_shap": 0.0092,
+   "share": 0.0011291695
+  },
+  {
+   "rank": 31,
+   "feature": "sin_day_of_year",
+   "mean_abs_shap": 0.0077,
+   "share": 0.0009521363
+  },
+  {
+   "rank": 32,
+   "feature": "day_of_year",
+   "mean_abs_shap": 0.0067,
+   "share": 0.00082005543
+  },
+  {
+   "rank": 33,
+   "feature": "wind_dir_sin",
+   "mean_abs_shap": 0.0062,
+   "share": 0.00076627324
+  },
+  {
+   "rank": 34,
+   "feature": "cos_day_of_year",
+   "mean_abs_shap": 0.0055,
+   "share": 0.0006725252
+  },
+  {
+   "rank": 35,
+   "feature": "power_rolling_min_86400s",
+   "mean_abs_shap": 0.0037,
+   "share": 0.00045447098
+  },
+  {
+   "rank": 36,
+   "feature": "day",
+   "mean_abs_shap": 0.0035,
+   "share": 0.00042817046
+  },
+  {
+   "rank": 37,
+   "feature": "week_of_year",
+   "mean_abs_shap": 0.0034,
+   "share": 0.00041504155
+  },
+  {
+   "rank": 38,
+   "feature": "minute",
+   "mean_abs_shap": 0.002,
+   "share": 0.0002490879
+  },
+  {
+   "rank": 39,
+   "feature": "day_of_week",
+   "mean_abs_shap": 0.0018,
+   "share": 0.0002244088
+  },
+  {
+   "rank": 40,
+   "feature": "day_length_hours",
+   "mean_abs_shap": 0.0016,
+   "share": 0.00019346505
+  },
+  {
+   "rank": 41,
+   "feature": "power_lag_48",
+   "mean_abs_shap": 0.0004,
+   "share": 4.468142e-05
+  },
+  {
+   "rank": 42,
+   "feature": "quarter",
+   "mean_abs_shap": 0.0003,
+   "share": 3.6091245e-05
+  },
+  {
+   "rank": 43,
+   "feature": "is_weekend",
+   "mean_abs_shap": 0.0,
+   "share": 4.801642e-06
+  }
+ ]
+}
