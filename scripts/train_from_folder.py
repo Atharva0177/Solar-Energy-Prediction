@@ -140,7 +140,8 @@ def do_verify(raw: Path) -> tuple[dict, pd.DataFrame, pd.DataFrame, pd.DataFrame
     wx = schema_map.load_weather(raw)
     sites = schema_map.load_site_details(raw)
 
-    ts = pd.to_datetime(gen["Timestamp"], errors="coerce")
+    # loaders return CANONICAL columns (schema_map renames) — profile reads them
+    ts = pd.to_datetime(gen["timestamp"], errors="coerce")
     cadence_min = None
     if ts.notna().sum() > 10:
         diffs = ts.dropna().sort_values().diff().dropna()
@@ -151,13 +152,18 @@ def do_verify(raw: Path) -> tuple[dict, pd.DataFrame, pd.DataFrame, pd.DataFrame
     profile = {
         "generation_rows": int(len(gen)),
         "weather_rows": int(len(wx)),
-        "sites": int(sites["SiteKey"].nunique()),
-        "campuses": int(gen["CampusKey"].nunique()),
+        "sites": int(sites["site_id"].nunique()),
+        "campuses": int(gen["campus_id"].nunique()),
         "start": str(ts.min()), "end": str(ts.max()),
         "cadence_minutes": cadence_min,
         "target_missing_pct": round(float(pd.to_numeric(
-            gen["SolarGeneration"], errors="coerce").isna().mean() * 100), 2),
+            gen["power"], errors="coerce").isna().mean() * 100), 2),
     }
+    # Downstream night-tagging merges solar-position timestamps (datetime64)
+    # against these frames — CSV strings here would fail the merge
+    # (Phase 2 flow parses before tagging; this orchestrator must too).
+    for frame in (gen, wx):
+        frame["timestamp"] = pd.to_datetime(frame["timestamp"], errors="coerce")
     return {"files": files, "profile": profile}, gen, wx, sites
 
 
@@ -278,7 +284,6 @@ def do_baseline(feats_dir: Path, ratios, seed: int) -> tuple[dict, dict, float]:
 
     df = pd.read_parquet(feats_dir)
     train, val, test = chronological_split(df, ratios)
-    del df
     tr_obs = train.loc[train["power"].notna()]
     denom_all = float(tr_obs["power"].max() - tr_obs["power"].min())
     per_range = tr_obs.groupby("site_id", observed=True)["power"].agg(
@@ -286,7 +291,9 @@ def do_baseline(feats_dir: Path, ratios, seed: int) -> tuple[dict, dict, float]:
     site_ranges = {sid: (v if v > 0 else None) for sid, v in per_range.items()}
     del tr_obs
 
-    base = PersistenceBaseline().fit(train)
+    # Fit on the FULL table (D-011 #3): the causal t−24h lookups reach back
+    # into val/test history, so fitting train-only NaN-starves val/test preds.
+    base = PersistenceBaseline().fit(df)
     preds = {name: base.predict(part) for name, part in
              (("val", val), ("test", test))}
     metrics = score_partitions(preds, {"val": val, "test": test},

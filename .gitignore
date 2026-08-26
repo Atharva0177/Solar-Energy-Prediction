@@ -42,7 +42,7 @@ data/train_jobs/
 unisolar/
 
 # Trained model artifacts at repo root (regenerable via phase scripts)
-models/
+/models/
 
 # Skill scratch state
 .superpowers/
