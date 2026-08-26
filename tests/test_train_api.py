@@ -140,3 +140,138 @@ class TestVerifyUpload:
         r = client.post("/api/v1/train/datasets/upload", files=files)
         assert r.status_code == 422
         assert "unexpected file" in r.json()["detail"]["message"]
+
+
+import json
+import threading
+import time
+
+import src.api.train as train_mod
+
+
+def _verify_dataset(client, tmp_path):
+    raw = make_unisolar_folder(tmp_path)
+    r = client.post("/api/v1/train/datasets/path", json={"path": str(raw)})
+    return r.json()["dataset_id"]
+
+
+def _fake_result(job_dir) -> None:
+    (job_dir / "result.json").write_text(json.dumps({
+        "generated_at": "2026-08-26T00:00:00+00:00",
+        "dataset": {}, "split": {}, "timing": {},
+        "persistence": {}, "model": {"model_name": "xgboost"},
+        "metrics_per_site": [], "test_all": {}, "val_all": {},
+    }), encoding="utf-8")
+
+
+class _Proc:
+    """Instant fake child: writes markers + result.json, optional hang."""
+
+    def __init__(self, cmd, release=None):
+        self.cmd = cmd
+        self._release = release
+        job_dir = Path(cmd[cmd.index("--dataset-dir") + 1])
+        (job_dir / "log.txt").write_text(
+            "== STAGE verify start\n== STAGE verify done {}\n== DONE\n",
+            encoding="utf-8")
+        _fake_result(job_dir)
+        self.returncode = 9  # torch-teardown style exit AFTER success
+
+    def poll(self):
+        return 0 if self._release is None or self._release.is_set() else None
+
+
+def _fake_popen_factory(release=None, hang_first=None):
+    def fake_popen(cmd, **kw):
+        p = _Proc(cmd, release=release)
+        if hang_first is not None and not hang_first["used"]:
+            hang_first["used"] = True
+            p.poll = lambda: None if not release.is_set() else 0
+        return p
+    return fake_popen
+
+
+class TestJobLifecycle:
+    def test_start_status_artifacts(self, client, tmp_path, monkeypatch):
+        ds = _verify_dataset(client, tmp_path)
+        seen_cmds = []
+        monkeypatch.setattr(train_mod.subprocess, "Popen",
+                            lambda cmd, **kw: seen_cmds.append(cmd)
+                            or _Proc(cmd))
+        r = client.post("/api/v1/train/jobs",
+                        json={"dataset_id": ds, "model": "xgboost"})
+        assert r.status_code == 200
+        body = r.json()
+        assert body["model"] == "xgboost" and body["status"] == "running"
+        job_id = body["job_id"]
+        assert "--fast-test" not in " ".join(seen_cmds[0])
+
+        # watcher thread needs a beat to flip running -> done
+        s = None
+        for _ in range(50):
+            s = client.get(f"/api/v1/train/jobs/{job_id}").json()
+            if s["status"] != "running":
+                break
+            time.sleep(0.1)
+        assert s is not None and s["status"] == "done"  # exit code 9 ≠ failed
+        assert [st["name"] for st in s["stages"]] == ["verify"]
+        assert s["result"]["model"]["model_name"] == "xgboost"
+        assert s["error"] is None
+
+        a = client.get(f"/api/v1/train/jobs/{job_id}/artifacts/result.json")
+        assert a.status_code == 200
+        assert a.json()["model"]["model_name"] == "xgboost"
+
+    def test_unknown_dataset_404_before_model_check(self, client):
+        # dataset existence is validated first (train.py order)
+        r = client.post("/api/v1/train/jobs",
+                        json={"dataset_id": "nope", "model": "not-a-model"})
+        assert r.status_code == 404
+
+    def test_bad_model_422(self, client, tmp_path):
+        ds = _verify_dataset(client, tmp_path)
+        r = client.post("/api/v1/train/jobs",
+                        json={"dataset_id": ds, "model": "not-a-model"})
+        assert r.status_code == 422
+
+    def test_bad_artifact_name_422_and_unknown_job_404(self, client):
+        r = client.get("/api/v1/train/jobs/x/artifacts/secrets.pem")
+        assert r.status_code == 422
+        r = client.get("/api/v1/train/jobs/no-such-job")
+        assert r.status_code == 404
+        r = client.get("/api/v1/train/jobs/no-such-job/artifacts/result.json")
+        assert r.status_code == 404
+
+    def test_one_job_at_a_time_409_then_slot_frees(self, client, tmp_path,
+                                                   monkeypatch):
+        ds = _verify_dataset(client, tmp_path)
+        release = threading.Event()
+        hang = {"used": False}
+        monkeypatch.setattr(
+            train_mod.subprocess, "Popen", _fake_popen_factory(release, hang))
+
+        j1 = client.post("/api/v1/train/jobs",
+                         json={"dataset_id": ds, "model": "lstm"}).json()["job_id"]
+        r = client.post("/api/v1/train/jobs",
+                        json={"dataset_id": ds, "model": "gru"})
+        assert r.status_code == 409
+
+        release.set()  # let the watcher reap job 1
+        deadline = time.time() + 10
+        while time.time() < deadline:
+            ok = client.post("/api/v1/train/jobs",
+                             json={"dataset_id": ds, "model": "gru",
+                                   "fast_test": True})
+            if ok.status_code == 200:
+                break
+            time.sleep(0.1)
+        assert ok.status_code == 200, "slot never freed after job finished"
+
+
+class TestConfigEndpoint:
+    def test_config_shape(self, client):
+        r = client.get("/api/v1/train/config")
+        assert r.status_code == 200
+        body = r.json()
+        assert {"seed", "train_ratio"} <= set(body["training"])
+        assert set(body["models"]) == {"xgboost", "lstm", "gru", "transformer"}
