@@ -291,6 +291,115 @@ def missingness_timeline_bundle(root: Path = ROOT) -> dict:
                 round(100 * (1 - act[m] / exp[m]), 3) for m in months]}
 
 
+SERIES_RUNS = ("xgboost", "lstm", "gru", "transformer")
+RESID_EDGES = np.arange(-10.0, 10.01, 0.5)
+
+
+def _metric4(row) -> dict:
+    return {"mae": round(float(row.mae), 4),
+            "rmse": round(float(row.rmse), 4),
+            "r2": round(float(row.r2), 4),
+            "nrmse": round(float(row.nrmse), 4)}
+
+
+def evaluation_series_bundle(root: Path = ROOT, seed: int = 0) -> dict:
+    """Per-run test-window aggregates for the Model Comparison page (D-025).
+
+    Metrics come from artifacts/evaluation/model_comparison.csv (all runs);
+    series fields exist only where artifacts/<run>/predictions_test.parquet
+    is present (the four ML runs). Night rows carry NaN actuals — dropped
+    from means/histograms; overlay gaps stay null, never bridged with zeros.
+
+    The hourly index is shared by every run (same prediction grid), so it is
+    emitted once as top-level ``hourly_t`` instead of duplicated per model
+    (~200 kB saved at real-data scale, D-025 size budget).
+    """
+    comp = pd.read_csv(root / "artifacts" / "evaluation" / "model_comparison.csv")
+    rng = np.random.default_rng(seed)
+    models: dict = {}
+    window: dict | None = None
+    hourly_t: list[str] | None = None
+
+    for _, row in comp[(comp.scope == "ALL") & (comp.split == "test")].iterrows():
+        entry: dict = {"metrics": _metric4(row)}
+        models[str(row.model)] = entry
+        pq = root / "artifacts" / str(row.model) / "predictions_test.parquet"
+        if str(row.model) not in SERIES_RUNS or not pq.exists():
+            continue
+        df = pd.read_parquet(pq)
+        df["timestamp"] = pd.to_datetime(df["timestamp"])
+        if window is None:
+            window = {"start": str(df["timestamp"].min()),
+                      "end": str(df["timestamp"].max())}
+        obs = df.loc[df["power"].notna()]
+
+        hourly_a = obs.set_index("timestamp")["power"].resample("1h").mean()
+        hourly_p = df.set_index("timestamp")["prediction"].resample("1h").mean()
+        idx = hourly_a.index.union(hourly_p.index)
+        hourly_a, hourly_p = hourly_a.reindex(idx), hourly_p.reindex(idx)
+        if hourly_t is None:
+            hourly_t = [str(t) for t in idx]
+        entry["hourly_all"] = {
+            "actual": [None if pd.isna(v) else round(float(v), 4)
+                       for v in hourly_a],
+            "predicted": [None if pd.isna(v) else round(float(v), 4)
+                          for v in hourly_p],
+        }
+
+        daily = {}
+        for sid, g in df.groupby("site_id", observed=True):
+            gobs = g.loc[g["power"].notna()].assign(day=lambda x: x["timestamp"].dt.date)
+            gall = g.assign(day=g["timestamp"].dt.date)
+            da = gobs.groupby("day")["power"].mean()
+            dp = gall.groupby("day")["prediction"].mean()
+            j = da.to_frame("actual").join(dp.to_frame("predicted"), how="outer")
+            daily[str(int(sid))] = {
+                "actual": [None if pd.isna(v) else round(float(v), 4)
+                           for v in j.sort_index()["actual"]],
+                "predicted": [None if pd.isna(v) else round(float(v), 4)
+                              for v in j.sort_index()["predicted"]]}
+        entry["daily_by_site"] = daily
+
+        take = min(2000, len(obs))
+        sel = rng.choice(len(obs), size=take, replace=False) if take else []
+        s = obs.iloc[sorted(sel)] if len(sel) else obs.iloc[0:0]
+        entry["scatter_sample"] = {
+            "actual": [round(float(v), 4) for v in s["power"]],
+            "predicted": [round(float(v), 4) for v in s["prediction"]]}
+
+        resid = (s["prediction"] - s["power"]).to_numpy(dtype=float)
+        counts, _ = np.histogram(resid, bins=RESID_EDGES)
+        entry["residual_hist"] = {
+            "edges": [round(float(e), 2) for e in RESID_EDGES],
+            "counts": [int(c) for c in counts]}
+
+    return {"test_window": window or {}, "hourly_t": hourly_t or [],
+            "models": models}
+
+
+def cross_site_summary_bundle(root: Path = ROOT) -> dict:
+    """Seen-val vs unseen-test ALL-scope rollups per model + per-site unseen
+    R2 strip, verbatim from the Phase 9 artifact (D-025)."""
+    df = pd.read_csv(root / "artifacts" / "cross_site" / "cross_site_metrics.csv")
+
+    def grab(g: pd.DataFrame, protocol: str, split: str) -> dict | None:
+        r = g[(g.protocol == protocol) & (g.split == split) & (g.scope == "ALL")]
+        return _metric4(r.iloc[0]) if len(r) else None
+
+    out: dict = {}
+    for model, g in df.groupby("model"):
+        sites = g[(g.protocol == "unseen") & (g.split == "test")
+                  & (g.scope == "SITE")]
+        out[str(model)] = {
+            "seen_val_all": grab(g, "seen", "val"),
+            "unseen_test_all": grab(g, "unseen", "test"),
+            "unseen_site_r2": [{"site_id": int(r.site_id),
+                                "r2": round(float(r.r2), 4)}
+                               for r in sites.itertuples()],
+        }
+    return {"models": out}
+
+
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     bundles = {
@@ -301,10 +410,15 @@ def main() -> int:
         "quality_extra.json": quality_extra_bundle(),
         "eda_profiles.json": eda_profiles_bundle(),
         "missingness_timeline.json": missingness_timeline_bundle(),
+        "evaluation_series.json": evaluation_series_bundle(),
+        "cross_site_summary.json": cross_site_summary_bundle(),
     }
     for name, payload in bundles.items():
         path = OUT / name
-        path.write_text(json.dumps(payload, indent=1), encoding="utf-8")
+        # series-heavy bundle is dumped compact: indent would put each of its
+        # thousands of array elements on its own line (~5x size, D-025 budget)
+        indent = None if name == "evaluation_series.json" else 1
+        path.write_text(json.dumps(payload, indent=indent), encoding="utf-8")
         print(f"wrote {path.relative_to(ROOT)} "
               f"({path.stat().st_size / 1024:.1f} kB)")
     return 0

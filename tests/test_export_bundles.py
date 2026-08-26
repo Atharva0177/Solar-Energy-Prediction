@@ -101,3 +101,90 @@ class TestMissingnessTimeline:
                         partition_cols=["site_id", "year", "month"], index=False)
         b = missingness_timeline_bundle(root)
         assert b["generation_missing_slot_pct"][0] > 0
+
+
+def _mini_artifacts(root: Path) -> None:
+    """Fake evaluation + cross-site + prediction artifacts alongside _mini_root."""
+    art = root / "artifacts"
+    comp = pd.DataFrame([
+        {"model": "xgboost", "split": "test", "scope": "ALL", "site_id": "",
+         "n_eval": 100, "mae": 1.0, "rmse": 2.0, "r2": 0.9, "nrmse": 0.02,
+         "daylight_mae": 1.1, "training_seconds": 1.0},
+        {"model": "zero", "split": "test", "scope": "ALL", "site_id": "",
+         "n_eval": 100, "mae": 3.0, "rmse": 4.0, "r2": 0.1, "nrmse": 0.05,
+         "daylight_mae": 3.1, "training_seconds": 0.0},
+    ])
+    (art / "evaluation").mkdir(parents=True, exist_ok=True)
+    comp.to_csv(art / "evaluation" / "model_comparison.csv", index=False)
+
+    ts = pd.date_range("2022-01-03", periods=96, freq="15min")
+    day = (ts.hour >= 6) & (ts.hour <= 18)
+    for name in ("xgboost",):
+        d = pd.DataFrame({
+            "site_id": 1, "timestamp": ts,
+            "power": np.where(day, 2.0, np.nan),
+            "is_daylight": day,
+            "prediction": np.full(96, 1.5)})
+        (art / name).mkdir(parents=True, exist_ok=True)
+        d.to_parquet(art / name / "predictions_test.parquet", index=False)
+
+    cs = pd.DataFrame([
+        {"model": "xgboost", "protocol": "seen", "split": "val", "scope": "ALL",
+         "site_id": "", "n_eval": 10, "n_missing": 0, "mae": 1.0, "rmse": 1.5,
+         "r2": 0.92, "nrmse": 0.02, "daylight_n": 10, "daylight_mae": 1.0,
+         "daylight_nrmse": 0.02},
+        {"model": "xgboost", "protocol": "unseen", "split": "test",
+         "scope": "ALL", "site_id": "", "n_eval": 10, "n_missing": 0,
+         "mae": 2.0, "rmse": 2.5, "r2": 0.80, "nrmse": 0.03,
+         "daylight_n": 10, "daylight_mae": 2.0, "daylight_nrmse": 0.03},
+        {"model": "xgboost", "protocol": "unseen", "split": "test",
+         "scope": "SITE", "site_id": 29, "n_eval": 10, "n_missing": 0,
+         "mae": 2.2, "rmse": 2.7, "r2": -1.5, "nrmse": 0.04,
+         "daylight_n": 10, "daylight_mae": 2.2, "daylight_nrmse": 0.04},
+    ])
+    (art / "cross_site").mkdir(parents=True, exist_ok=True)
+    cs.to_csv(art / "cross_site" / "cross_site_metrics.csv", index=False)
+
+
+class TestEvaluationSeries:
+    def test_metrics_for_all_runs_series_only_where_parquet(self, tmp_path):
+        from scripts.export_frontend_data import evaluation_series_bundle
+
+        root = _mini_root(tmp_path)
+        _mini_artifacts(root)
+        b = evaluation_series_bundle(root)
+        assert set(b["models"]) == {"xgboost", "zero"}
+        assert b["models"]["zero"]["metrics"]["mae"] == 3.0
+        assert "hourly_all" not in b["models"]["zero"]
+
+        ser = b["models"]["xgboost"]
+        assert ser["metrics"]["mae"] == 1.0
+        assert len(b["hourly_t"]) == 24                   # 96 × 15-min -> 24 h buckets
+        assert len(ser["hourly_all"]["actual"]) == 24     # aligned to shared t
+        assert "t" not in ser["hourly_all"]               # deduped, D-025 budget
+        assert len(ser["residual_hist"]["edges"]) == 41   # -10..10 step 0.5
+        # residuals counted on daylight-observed rows only: integer hours
+        # 6..18 inclusive -> 13 h x 4 slots = 52
+        assert sum(ser["residual_hist"]["counts"]) == 52
+        assert len(ser["scatter_sample"]["actual"]) <= 2000
+
+    def test_test_window_from_predictions(self, tmp_path):
+        from scripts.export_frontend_data import evaluation_series_bundle
+
+        root = _mini_root(tmp_path)
+        _mini_artifacts(root)
+        b = evaluation_series_bundle(root)
+        assert b["test_window"]["start"].startswith("2022-01-03")
+
+
+class TestCrossSiteSummary:
+    def test_rollups_and_negative_r2_preserved(self, tmp_path):
+        from scripts.export_frontend_data import cross_site_summary_bundle
+
+        root = _mini_root(tmp_path)
+        _mini_artifacts(root)
+        b = cross_site_summary_bundle(root)
+        m = b["models"]["xgboost"]
+        assert m["seen_val_all"]["mae"] == 1.0
+        assert m["unseen_test_all"]["r2"] == 0.8
+        assert m["unseen_site_r2"] == [{"site_id": 29, "r2": -1.5}]
