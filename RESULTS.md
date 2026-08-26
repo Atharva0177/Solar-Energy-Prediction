@@ -618,3 +618,14 @@ bit-close vs the old loop on real site-1 data, deep-model channel windows
 identical); full suite **147 green**. Live UI: first model switch ≈ 0.97 s
 end-to-end incl. dropdown clicks; re-selecting a previously fetched
 (site, model, horizon) renders from cache with no network request.
+
+## Post-PRD: Train-page live verification (2026-08-26)
+
+Display-only jobs against the unmodified UNISOLAR folder (D-024):
+
+| run | model | test MAE | test RMSE | test R² | fit s | total s |
+|-----|-------|----------|-----------|---------|-------|---------|
+| 130510-xgboost-a18bf | xgboost (full) | 1.0559 | 2.5296 | 0.9509 | 10.91 | 56.22 |
+| 154343-transformer-82c0d | transformer fast-test | — | — | — | — | 56.1 |
+
+Fast-test numbers are smoke-test only. Suite grew 147 → 170 tests, all green.

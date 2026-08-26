@@ -140,6 +140,21 @@ and results are documented (PRD §59). No placeholder implementations count as d
 
 ---
 
+## Post-PRD Enhancement — Train page + richer visuals (D-024/D-025)
+
+- [x] Train page: folder verify (path/upload) → configure → job progress → results;
+      job-scoped dirs, one heavy job at a time, served v1 untouched
+- [x] Persistence fit-scope fix in train_from_folder (D-011 #3) + pipeline e2e tests
+- [x] Marker-based job success (torch exit-9 teardown) + regression tests
+- [x] Train API test coverage (verify endpoints, job lifecycle, artifacts, config)
+- [x] Export bundles: eda_profiles, missingness_timeline, evaluation_series,
+      cross_site_summary (+ unit tests)
+- [x] Dashboard: hourly profile + weather↔power heatmap; Quality: monthly gap
+      timeline; Comparison: pred-vs-actual explorer, all-runs bars, cross-site card
+- [x] First live end-to-end training run verified (see RESULTS.md)
+
+---
+
 ## Acceptance criteria (PRD §56)
 
 Tracked at project close. All 30 boxes must be checked before "complete":

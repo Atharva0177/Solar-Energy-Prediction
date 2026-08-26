@@ -702,3 +702,25 @@ One entry per decision: context, choice, rationale, consequences.
   time or user-provided origin invalidates the client cache key and this
   design. `build_features` remains the batch reference implementation used
   by tooling/tests.
+
+## D-024 — Job-scoped display-only training (Train page) (2026-08-26)
+
+POST /api/v1/train/jobs spawns `scripts/train_from_folder.py` per job; all
+outputs land in `data/train_jobs/<dataset_id>/<job_id>/` (raw uploads,
+staged parquet, features, model artifacts, result.json). Job state derives
+from filesystem log markers (`== STAGE … start|done`, `== DONE`,
+`== FAILED`) parsed by `src/api/train.py`; success is marker-based because
+torch teardown on this box exits 9 after successful runs. One heavy job at
+a time (409 otherwise). The served v1 models, phase artifacts, and recorded
+RESULTS.md numbers are never modified — Train-page runs are display-only.
+
+## D-025 — Post-PRD frontend graph additions (2026-08-26)
+
+The PRD §38 pages are augmented with artifact-derived static bundles written
+by `scripts/export_frontend_data.py` (D-020 pattern, no new REST endpoints):
+`site_monthly` + `quality_extra` (earlier increment), then `eda_profiles`,
+`missingness_timeline`, `evaluation_series`, `cross_site_summary`. Bundles
+are regenerated after any artifact refresh and committed so a fresh clone
+builds without a Python env. Pred-vs-actual overlays keep night gaps as
+nulls (never bridged); baselines carry metrics only, series fields exist
+solely where a predictions parquet exists.

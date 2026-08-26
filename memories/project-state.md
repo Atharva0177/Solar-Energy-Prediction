@@ -140,7 +140,13 @@ Authoritative trackers (repo files, always win over this snapshot):
   (semantics pinned vs Phase 5 batch by `TestIncrementalFeatures`); frontend
   caches forecasts per (site,model,horizon) + 300 ms slider debounce.
   Measured: xgboost 2.99→0.57 s, lstm/transformer ~2.4→0.22 s; suite 147 green.
+- Post-PRD enhancement shipped (D-024/D-025, 2026-08-26): Train page hardened
+  + first live end-to-end run (xgboost full 56.2 s, test MAE 1.056 kW —
+  `artifacts/train_live_run/summary.json`; marker-based job success, D-024);
+  four new export bundles + six charts on Dashboard/Quality/Comparison
+  (D-025). Suite 147 → 170 green.
 - **Next: Phase 15 — Testing (unit/API/leakage suites per PRD §45; much
-  already green — audit coverage gaps, add missing PRD §45 cases)**
+  already green at 170 — audit coverage gaps, add missing PRD §45 cases);
+  then Phase 16 Docker**
 
 Workflow rules from user: [[phase-gate-confirmations]], keep [[env-conda-run-newline]] in mind when running snippets.
