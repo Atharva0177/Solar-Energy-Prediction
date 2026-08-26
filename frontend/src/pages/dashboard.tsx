@@ -52,15 +52,6 @@ function siteMonthlyRows(siteId: number) {
   }))
 }
 
-/** Campus-comparison rows: mean monthly kWh per campus across shared months. */
-function campusRows() {
-  return monthly.campuses.map((c) => ({
-    campus: `campus ${c.campus_id}`,
-    nSites: c.n_sites,
-    kwhMean: c.monthly_kwh_mean,
-  }))
-}
-
 /** Dashboard (PRD §38): latest power, last-day energy, predicted next 24 h,
  * best model + accuracy — over one continuous day-strip: the observed day
  * flowing into tomorrow's recursive forecast with conformal bounds. */
