@@ -1,0 +1,17 @@
+{
+  "xgboost_full": {
+    "job_id": "130510-xgboost-a18bf",
+    "test_mae": 1.0559082870424497,
+    "test_rmse": 2.5295571471419005,
+    "test_r2": 0.9509074450003043,
+    "fit_seconds": 10.91,
+    "total_seconds": 56.22
+  },
+  "transformer_fast_test": {
+    "job_id": "154343-transformer-82c0d",
+    "status": "done",
+    "child_exit_code": 0,
+    "total_seconds": 56.1
+  },
+  "note": "Display-only runs (D-024); served v1 untouched. Transformer child exited 0 this run — the torch teardown exit-9 path is covered by tests/test_train_api.py (fake proc rc=9 still reaches done); success semantics are log-marker based either way. job_status now surfaces returncode as a diagnostic field."
+}

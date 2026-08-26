@@ -351,6 +351,8 @@ def job_status(job_id: str):
                            - job["started_at"], 1),
         "log_tail": text.splitlines()[-200:],
         "error": job["error"],
+        # diagnostic only — success is decided by log markers (see _final_state)
+        "returncode": job.get("returncode"),
         "result": _load_result(job["dir"]),
     }
     return out

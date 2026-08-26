@@ -214,6 +214,7 @@ class TestJobLifecycle:
                 break
             time.sleep(0.1)
         assert s is not None and s["status"] == "done"  # exit code 9 ≠ failed
+        assert s["returncode"] == 9  # diagnostic field surfaces the teardown exit
         assert [st["name"] for st in s["stages"]] == ["verify"]
         assert s["result"]["model"]["model_name"] == "xgboost"
         assert s["error"] is None
