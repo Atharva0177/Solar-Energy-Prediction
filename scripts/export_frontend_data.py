@@ -363,11 +363,12 @@ def evaluation_series_bundle(root: Path = ROOT, seed: int = 0) -> dict:
         take = min(2000, len(obs))
         sel = rng.choice(len(obs), size=take, replace=False) if take else []
         s = obs.iloc[sorted(sel)] if len(sel) else obs.iloc[0:0]
+        pair = s[["power", "prediction"]].dropna()  # a few preds are NaN
         entry["scatter_sample"] = {
-            "actual": [round(float(v), 4) for v in s["power"]],
-            "predicted": [round(float(v), 4) for v in s["prediction"]]}
+            "actual": [round(float(v), 4) for v in pair["power"]],
+            "predicted": [round(float(v), 4) for v in pair["prediction"]]}
 
-        resid = (s["prediction"] - s["power"]).to_numpy(dtype=float)
+        resid = (pair["prediction"] - pair["power"]).to_numpy(dtype=float)
         counts, _ = np.histogram(resid, bins=RESID_EDGES)
         entry["residual_hist"] = {
             "edges": [round(float(e), 2) for e in RESID_EDGES],
@@ -418,7 +419,10 @@ def main() -> int:
         # series-heavy bundle is dumped compact: indent would put each of its
         # thousands of array elements on its own line (~5x size, D-025 budget)
         indent = None if name == "evaluation_series.json" else 1
-        path.write_text(json.dumps(payload, indent=indent), encoding="utf-8")
+        # allow_nan=False: NaN would serialize as bare `NaN` — valid for
+        # python json.loads but TS's JSON module parse rejects it (D-025)
+        path.write_text(json.dumps(payload, indent=indent, allow_nan=False),
+                        encoding="utf-8")
         print(f"wrote {path.relative_to(ROOT)} "
               f"({path.stat().st_size / 1024:.1f} kB)")
     return 0
