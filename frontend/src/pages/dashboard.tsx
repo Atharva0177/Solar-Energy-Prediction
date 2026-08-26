@@ -29,8 +29,18 @@ import {
 import { useApi } from '@/hooks/useApi'
 import { api } from '@/lib/api'
 import { addDays, fmtNum } from '@/lib/format'
-import type { Metrics, SiteMonthlyBundle } from '@/lib/types'
+import type { EdaProfilesBundle, Metrics, SiteMonthlyBundle } from '@/lib/types'
 import siteMonthlyJson from '@/data/site_monthly.json'
+import edaJson from '@/data/eda_profiles.json'
+
+const eda = edaJson as EdaProfilesBundle
+
+const CORR_VAR_LABELS: Record<string, string> = {
+  temperature: 'Temperature',
+  humidity: 'Humidity',
+  wind_speed: 'Wind speed',
+  solar_elevation_deg: 'Solar elevation',
+}
 
 interface StripPoint {
   t: string
@@ -330,6 +340,22 @@ export default function Dashboard() {
         </VizCard>
       </div>
 
+      <div className="grid gap-4 lg:grid-cols-2">
+        <VizCard
+          title="Generation profile by time of day"
+          description="Mean observed daylight-slot power per 15-min slot — all sites bold, campuses thin."
+        >
+          <HourlyProfileChart />
+        </VizCard>
+
+        <VizCard
+          title="Weather ↔ power correlation"
+          description="Which covariates actually move generation, per campus."
+        >
+          <CorrHeatmap />
+        </VizCard>
+      </div>
+
       {models.data && (
         <p className="text-xs text-muted-foreground">
           Serving {models.data.filter((m) => m.served).length} of{' '}
@@ -381,5 +407,87 @@ function CampusChart() {
         </LineChart>
       </ResponsiveContainer>
     </figure>
+  )
+}
+
+/** Mean daylight-slot kW per time-of-day — ALL bold, campuses thin. */
+function HourlyProfileChart() {
+  const { slots, mean_kw } = eda.hour_of_day
+  const rows = slots.map((slot, i) => {
+    const pt: Record<string, string | number | null> = { slot }
+    for (const [key, arr] of Object.entries(mean_kw))
+      pt[key === 'ALL' ? 'all' : `c${key}`] = arr[i]
+    return pt
+  })
+  const campusKeys = Object.keys(mean_kw).filter((k) => k !== 'ALL')
+  return (
+    <figure className="h-72">
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={rows} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+          <CartesianGrid {...gridProps} />
+          <XAxis dataKey="slot" tick={{ ...axisTick }} tickLine={false}
+                 axisLine={{ stroke: 'var(--viz-axis)' }} minTickGap={28} />
+          <YAxis width={44} tick={{ ...axisTick }} tickLine={false} axisLine={false} />
+          <RTooltip content={<ChartTooltip fmtValue={(v) => `${fmtNum(v, 2)} kW`} />} />
+          <Legend wrapperStyle={legendStyle()} />
+          {campusKeys.map((k, i) => (
+            <Line key={k} type="monotone" dataKey={`c${k}`}
+                  name={`campus ${k}`}
+                  stroke={CAMPUS_PALETTE[i % CAMPUS_PALETTE.length]}
+                  strokeWidth={1} strokeOpacity={0.55} dot={false}
+                  isAnimationActive={false} />
+          ))}
+          <Line type="monotone" dataKey="all" name="all sites"
+                stroke="var(--series-observed)" strokeWidth={2.5} dot={false}
+                isAnimationActive={false} />
+        </LineChart>
+      </ResponsiveContainer>
+    </figure>
+  )
+}
+
+/** CSS-grid correlation heatmap — color-mix intensity encodes |r|. */
+function CorrHeatmap() {
+  const { campuses, vars, power_corr } = eda.correlation
+  const cellBg = (r: number | null) =>
+    r === null ? 'var(--muted)'
+      : `color-mix(in oklab, var(--chart-1) ${Math.round(Math.abs(r) * 100)}%, transparent)`
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-xs">
+        <thead>
+          <tr className="text-left text-muted-foreground">
+            <th className="px-2 py-1 font-medium">Campus</th>
+            {vars.map((v) => (
+              <th key={v} className="px-2 py-1 font-medium">{CORR_VAR_LABELS[v] ?? v}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {campuses.map((c, ri) => (
+            <tr key={c} className="border-t">
+              <td className="px-2 py-1.5 font-mono">campus {c}</td>
+              {vars.map((_v, ci) => {
+                const r = power_corr[ri]?.[ci] ?? null
+                return (
+                  <td key={ci} className="px-1.5 py-1.5">
+                    <div
+                      className="rounded px-2 py-1 text-center font-mono tabular-nums"
+                      style={{ background: cellBg(r) }}
+                      title={`campus ${c} · ${vars[ci]} · r=${r ?? '—'}`}
+                    >
+                      {r === null ? '—' : fmtNum(r, 2)}
+                    </div>
+                  </td>
+                )
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="mt-2 text-[11px] text-muted-foreground">
+        Pearson r vs observed daylight power, pooled over each campus's sites.
+      </p>
+    </div>
   )
 }

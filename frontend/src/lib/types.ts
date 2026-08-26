@@ -259,3 +259,66 @@ export interface TrainConfig {
   training: Record<string, string | number | boolean>
   models: Record<string, { params: Record<string, string | number | boolean> }>
 }
+
+/* ---- Post-PRD visual bundles (export_frontend_data.py) ---- */
+
+export interface EdaProfilesBundle {
+  hour_of_day: {
+    slots: string[]
+    mean_kw: Record<string, (number | null)[]> // "ALL" + campus ids
+  }
+  correlation: {
+    campuses: number[]
+    vars: string[]
+    power_corr: (number | null)[][] // campuses × vars
+  }
+}
+
+export interface MissingnessTimelineBundle {
+  months: string[]
+  generation_missing_slot_pct: number[]
+}
+
+export interface EvalSeriesMetrics {
+  mae: number
+  rmse: number
+  r2: number
+  nrmse: number
+}
+
+/** Hourly overlay for one run — index is the bundle-level shared `hourly_t`
+ * (identical across runs, deduped at export for size). */
+export interface HourlySeries {
+  actual: (number | null)[]
+  predicted: (number | null)[]
+}
+
+export interface ResidualHist {
+  edges: number[] // 41 edges → 40 bins
+  counts: number[]
+}
+
+export interface EvalSeriesEntry {
+  metrics: EvalSeriesMetrics
+  hourly_all?: HourlySeries
+  daily_by_site?: Record<string, { actual: (number | null)[]; predicted: (number | null)[] }>
+  scatter_sample?: { actual: number[]; predicted: number[] }
+  residual_hist?: ResidualHist
+}
+
+export interface EvalSeriesBundle {
+  test_window: { start: string; end: string }
+  /** Shared hourly index for every run's `hourly_all` arrays. */
+  hourly_t: string[]
+  models: Record<string, EvalSeriesEntry>
+}
+
+export interface CrossSiteEntry {
+  seen_val_all: EvalSeriesMetrics | null
+  unseen_test_all: EvalSeriesMetrics | null
+  unseen_site_r2: { site_id: number; r2: number }[]
+}
+
+export interface CrossSiteSummaryBundle {
+  models: Record<string, CrossSiteEntry>
+}
