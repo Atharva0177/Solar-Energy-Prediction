@@ -14,12 +14,14 @@ import { CheckCircle2 } from 'lucide-react'
 
 import { StatTile, VizCard, axisTick, gridProps, legendStyle } from '@/components/viz'
 import { fmtNum } from '@/lib/format'
-import type { QualityBundle, QualityExtraBundle } from '@/lib/types'
+import type { MissingnessTimelineBundle, QualityBundle, QualityExtraBundle } from '@/lib/types'
 import qualityJson from '@/data/data_quality.json'
 import qualityExtraJson from '@/data/quality_extra.json'
+import missingnessJson from '@/data/missingness_timeline.json'
 
 const q = qualityJson as QualityBundle
 const qx = qualityExtraJson as QualityExtraBundle
+const mt = missingnessJson as MissingnessTimelineBundle
 
 const EDA_PANELS = [
   { file: '01_power_distribution.png', title: 'Power distribution' },
@@ -85,6 +87,48 @@ export default function Quality() {
         <figure className="h-72">
           <ResponsiveContainer width="100%" height="100%">
             <LineChartHost />
+          </ResponsiveContainer>
+        </figure>
+      </VizCard>
+
+      <VizCard
+        title="Generation slot gaps by month"
+        description={
+          `Missing 15-min slots vs each site's expected grid, summed across ` +
+          `${mt.months.length} months. Flat at zero except where reporting drops.`
+        }
+      >
+        <figure className="h-56">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={mt.months.map((m, i) => ({
+                month: m.slice(2),
+                pct: mt.generation_missing_slot_pct[i],
+              }))}
+              margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+            >
+              <CartesianGrid {...gridProps} />
+              <XAxis dataKey="month" tick={{ ...axisTick }} tickLine={false}
+                     axisLine={{ stroke: 'var(--viz-axis)' }} minTickGap={24} />
+              <YAxis width={44} domain={[0, (dataMax: number) => Math.max(1, dataMax * 1.1)]}
+                     tickFormatter={(v: number) => `${fmtNum(v, 1)}%`}
+                     tick={{ ...axisTick }} tickLine={false} axisLine={false} />
+              <RTooltip
+                content={({ active, payload, label }) => {
+                  if (!active || !payload?.length) return null
+                  return (
+                    <div className="rounded-lg border bg-popover px-3 py-2 text-xs shadow-md">
+                      <div className="mb-1 font-mono text-muted-foreground">20{label}</div>
+                      <div className="font-mono tabular-nums">
+                        {(payload[0].value as number).toFixed(2)}% slots missing
+                      </div>
+                    </div>
+                  )
+                }}
+              />
+              <Bar dataKey="pct" name="missing slots" fill="var(--chart-5)"
+                   radius={[2, 2, 0, 0]} isAnimationActive={false} />
+            </BarChart>
           </ResponsiveContainer>
         </figure>
       </VizCard>
