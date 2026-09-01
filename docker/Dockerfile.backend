@@ -1,0 +1,71 @@
+# ============================================================
+# Stage 1: Builder
+# ============================================================
+FROM python:3.11-slim as builder
+
+WORKDIR /app
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    gcc \
+    g++ \
+    gfortran \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+
+# Create wheels
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
+
+# ============================================================
+# Stage 2: Runtime
+# ============================================================
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgomp1 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN useradd -m -u 1000 solar
+
+# Copy wheels from builder
+COPY --from=builder /app/wheels /wheels
+COPY --from=builder /app/requirements.txt .
+
+# Install Python packages from wheels
+RUN pip install --no-cache /wheels/*
+
+# Copy application code
+COPY --chown=solar:solar src/ src/
+COPY --chown=solar:solar api/ api/
+COPY --chown=solar:solar scripts/ scripts/
+COPY --chown=solar:solar configs/ configs/
+COPY --chown=solar:solar artifacts/ artifacts/
+COPY --chown=solar:solar pyproject.toml .
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PORT=8000 \
+    LOG_LEVEL=info
+
+# Switch to non-root user
+USER solar
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:${PORT}/api/v1/health || exit 1
+
+# Expose port
+EXPOSE ${PORT}
+
+# Default command
+CMD ["python", "-m", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]

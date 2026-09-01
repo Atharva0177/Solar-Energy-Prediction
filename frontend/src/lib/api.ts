@@ -107,6 +107,8 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ path }),
     }),
+  listDatasets: () =>
+    request<{ datasets: Array<{ path: string; description: string }> }>('/train/datasets/list'),
   uploadDataset: (files: File[]) => {
     const form = new FormData()
     for (const f of files) form.append('files', f, f.name)

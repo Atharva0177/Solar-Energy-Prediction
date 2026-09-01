@@ -1,0 +1,125 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # ============================================================
+  # CodeQL Security Analysis
+  # ============================================================
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['python']
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+      
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+      
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
+  
+  # ============================================================
+  # SAST - Bandit Security Scanner
+  # ============================================================
+  bandit:
+    name: Bandit Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install Bandit
+        run: pip install bandit
+      
+      - name: Run Bandit
+        run: |
+          bandit -r src/ -f json -o bandit-report.json || true
+          bandit -r src/ -f txt
+      
+      - name: Upload Bandit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-report
+          path: bandit-report.json
+  
+  # ============================================================
+  # OWASP Dependency Check
+  # ============================================================
+  dependency-check:
+    name: OWASP Dependency Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          path: '.'
+          format: 'JSON'
+          args: >
+            --enableExperimental
+            --scan
+      
+      - name: Upload Dependency Check report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: reports/
+  
+  # ============================================================
+  # Complexity Analysis
+  # ============================================================
+  radon:
+    name: Code Complexity Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install Radon
+        run: pip install radon
+      
+      - name: Cyclomatic Complexity
+        run: |
+          radon cc src/ -a -nb || true
+      
+      - name: Maintainability Index
+        run: |
+          radon mi src/ -nb || true
+      
+      - name: Raw Metrics
+        run: |
+          radon raw src/ -s || true

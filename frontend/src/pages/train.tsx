@@ -106,7 +106,8 @@ function filesFromError(e: unknown): TrainFileCheck[] | null {
 export default function Train() {
   // dataset ingestion
   const [tab, setTab] = useState<'path' | 'upload'>('path')
-  const [pathInput, setPathInput] = useState('E:\\Solar_gemini\\unisolar')
+  const [pathInput, setPathInput] = useState('data/raw')
+  const [suggestedPaths, setSuggestedPaths] = useState<Array<{path: string; description: string}>>([])
   const [picked, setPicked] = useState<File[]>([])
   const [dsBusy, setDsBusy] = useState(false)
   const [dsError, setDsError] = useState<string | null>(null)
@@ -129,6 +130,19 @@ export default function Train() {
 
   useEffect(() => {
     api.trainConfig().then(setConfig).catch(() => setConfig(null))
+    // Load available datasets
+    api.listDatasets()
+      .then((result) => {
+        if (result?.datasets) {
+          setSuggestedPaths(result.datasets.map((d: any) => ({
+            path: d.path,
+            description: d.description
+          })))
+        }
+      })
+      .catch(() => {
+        // Silently fail if endpoint doesn't exist
+      })
   }, [])
 
   const verify = async () => {
@@ -208,10 +222,20 @@ export default function Train() {
                   type="text"
                   spellCheck={false}
                   className="h-8 w-full rounded-md border bg-background px-2 font-mono text-xs"
-                  placeholder="E:\path\to\unisolar"
+                  placeholder="data/raw"
                   value={pathInput}
                   onChange={(e) => setPathInput(e.target.value)}
                 />
+                {suggestedPaths.length > 0 && (
+                  <div className="rounded-md border border-dashed border-muted-foreground/50 bg-background/50 p-2 text-xs text-muted-foreground">
+                    <div className="font-semibold mb-1">Available datasets:</div>
+                    {suggestedPaths.map((sp) => (
+                      <div key={sp.path} className="cursor-pointer hover:text-foreground py-0.5" onClick={() => setPathInput(sp.path)}>
+                        <code className="text-xs">{sp.path}</code> — {sp.description}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
               <Button size="sm" onClick={verify} disabled={dsBusy || !pathInput.trim()}>
                 {dsBusy ? <LoaderCircle className="animate-spin" /> : <FolderCheck />}

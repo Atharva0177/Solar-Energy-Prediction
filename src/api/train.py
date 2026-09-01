@@ -166,11 +166,91 @@ def _register_dataset(mode: str, raw_dir: Path,
     return DatasetOut(**meta)
 
 
+@router.get("/datasets/list")
+def list_available_datasets():
+    """List available datasets on the server."""
+    available = []
+    
+    # Check data/raw for CSV files
+    raw_path = REPO_ROOT / "data" / "raw"
+    if raw_path.is_dir():
+        has_files = any(raw_path.glob("*.csv"))
+        if has_files:
+            available.append({
+                "path": "data/raw",
+                "description": "Raw data directory",
+                "files": sorted([f.name for f in raw_path.glob("*.csv")])
+            })
+    
+    # Check data/processed
+    processed_path = REPO_ROOT / "data" / "processed"
+    if processed_path.is_dir():
+        has_files = any(processed_path.glob("*.csv"))
+        if has_files:
+            available.append({
+                "path": "data/processed",
+                "description": "Processed data directory",
+                "files": sorted([f.name for f in processed_path.glob("*.csv")])
+            })
+    
+    # Check for previously uploaded datasets
+    upload_dirs = []
+    if JOBS_ROOT.is_dir():
+        for ds_dir in sorted(JOBS_ROOT.glob("*-upload-*")):
+            meta_file = ds_dir / "dataset.json"
+            if meta_file.exists():
+                try:
+                    meta = json.loads(meta_file.read_text())
+                    upload_dirs.append({
+                        "path": str(ds_dir.relative_to(REPO_ROOT)),
+                        "description": f"Uploaded dataset ({meta.get('mode', 'unknown')})",
+                        "dataset_id": meta.get("dataset_id")
+                    })
+                except:
+                    pass
+    
+    if upload_dirs:
+        available.extend(upload_dirs)
+    
+    return {"datasets": available}
+
+
 @router.post("/datasets/path")
 def verify_path_dataset(req: PathDatasetRequest):
-    raw = Path(req.path).expanduser().resolve()
+    # Handle Windows paths by converting backslashes to forward slashes
+    input_path = req.path.replace("\\", "/")
+    
+    # Try to normalize the path:
+    # 1. If it's relative or starts with data/, use it as-is
+    # 2. If it contains unisolar, look in data/raw/
+    # 3. Otherwise treat as relative to REPO_ROOT
+    
+    if "unisolar" in input_path.lower():
+        # User specified unisolar data - should be in data/raw/
+        raw = REPO_ROOT / "data" / "raw"
+    elif input_path.startswith("/app/"):
+        # Docker absolute path - strip /app and make relative to REPO_ROOT
+        raw = REPO_ROOT / input_path[5:]
+    elif input_path.startswith("data/"):
+        # Already relative path from repo root
+        raw = REPO_ROOT / input_path
+    else:
+        # Try as relative to REPO_ROOT first
+        raw = REPO_ROOT / input_path
+    
+    raw = raw.expanduser().resolve()
+    
     if not raw.is_dir():
-        raise HTTPException(422, f"not a directory: {raw}")
+        # Provide helpful error message
+        available = []
+        for p in [REPO_ROOT / "data" / "raw", REPO_ROOT / "data" / "processed"]:
+            if p.is_dir():
+                available.append(str(p.relative_to(REPO_ROOT)))
+        detail = f"not a directory: {raw}"
+        if available:
+            detail += f"\n\nAvailable paths:\n" + "\n".join(f"  - {p}" for p in available)
+        raise HTTPException(422, detail=detail)
+    
     files = _check_raw(raw)
     if not all(f["ok"] for f in files):
         raise HTTPException(422, detail={"message": "folder failed verification",

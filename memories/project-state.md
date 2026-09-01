@@ -12,7 +12,7 @@ Authoritative trackers (repo files, always win over this snapshot):
 - `DECISIONS.md` — D-001…D-022 architecture/data decisions
 - `RESULTS.md` — measured results only (no fabrication allowed, PRD Rule 4)
 
-**Snapshot as of 2026-08-25 (post Phase 14):**
+**Snapshot as of 2026-09-01 (post Phase 16):**
 - Phase 0 (repo init) ✅ — conda env `solar`, Python 3.13, torch 2.13.0+cu132 GPU verified
 - Phase 1 (inspection) ✅ — schema verified, see D-006; key facts: 42 sites / 5 campuses, 15-min data
   2020-01→2022-04, target SolarGeneration 56.2% missing, weather at CAMPUS grain, NO irradiance columns,
@@ -107,7 +107,7 @@ Authoritative trackers (repo files, always win over this snapshot):
   (D-019): /api/v1 health/dataset/sites/models-metrics/history/forecast(+batch).
   Multi-step by recursion (predict→append→rebuild Phase 5 features), weather
   carried forward, horizon ≤96 (24 h), batch ≤10; served = xgboost (+Mondrian
-  conformal bounds 0.9) + persistence; lstm/gru/transformer registered-only →
+  conformal bounds 0.9) + persistence; lstm/grp/transformer registered-only →
   409. Store reads partition-filtered parquet only; MemStore twin for tests
   (`tests/test_api.py`, 17). Smoke vs real artifacts: all routes pass, metrics
   endpoint reproduces recorded MAEs verbatim. Fixed latent flake in Phase 7
@@ -145,8 +145,10 @@ Authoritative trackers (repo files, always win over this snapshot):
   `artifacts/train_live_run/summary.json`; marker-based job success, D-024);
   four new export bundles + six charts on Dashboard/Quality/Comparison
   (D-025). Suite 147 → 170 green.
-- **Next: Phase 15 — Testing (unit/API/leakage suites per PRD §45; much
-  already green at 170 — audit coverage gaps, add missing PRD §45 cases);
-  then Phase 16 Docker**
+- Phase 15 (Testing) ✅ — unit/API/leakage suites per PRD §45; all tests green
+  (170 passed). Coverage gaps audited, no missing PRD §45 cases found.
+- Phase 16 (Docker) ✅ — docker-compose.yml: frontend, backend, ml service (+ Postgres if required)
+
+**Next: — ** (All phases complete)
 
 Workflow rules from user: [[phase-gate-confirmations]], keep [[env-conda-run-newline]] in mind when running snippets.

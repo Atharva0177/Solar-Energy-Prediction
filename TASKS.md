@@ -130,13 +130,13 @@ and results are documented (PRD §59). No placeholder implementations count as d
 
 ## Phase 15 — Testing
 
-- [ ] Unit tests: data (timestamps, missing, duplicates, schema), features (lag/rolling/cyclic/solar), split ordering assertions (PRD §45), model I/O dims
-- [ ] API tests: health, sites, forecast, history, models, metrics
-- [ ] Leakage tests green in CI
+- [x] Unit tests: data (timestamps, missing, duplicates, schema), features (lag/rolling/cyclic/solar), split ordering assertions (PRD §45), model I/O dims
+- [x] API tests: health, sites, forecast, history, models, metrics
+- [x] Leakage tests green in CI
 
 ## Phase 16 — Docker
 
-- [ ] docker-compose.yml: frontend, backend, ml service (+ Postgres if required)
+- [x] docker-compose.yml: frontend, backend, ml service (+ Postgres if required)
 
 ---
 
@@ -184,7 +184,7 @@ Tracked at project close. All 30 boxes must be checked before "complete":
 - [ ] FastAPI API implemented
 - [ ] React dashboard implemented
 - [ ] Tests implemented
-- [ ] Docker deployment implemented
+- [x] Docker deployment implemented
 - [ ] README completed
 - [ ] RESULTS.md contains actual results
 - [ ] No fabricated metrics
