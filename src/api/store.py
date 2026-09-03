@@ -319,3 +319,23 @@ class MemStore(ParquetStore):
         if model_id not in self._metrics:
             raise ModelNotFound(model_id)
         return self._metrics[model_id]
+
+    def model_registry(self) -> list[dict]:
+        """Served status from injected models, not on-disk artifacts.
+
+        The parent implementation checks ``root / artifact`` paths, which
+        exist only where the trained artifacts live — in CI (or any clean
+        checkout) they are gitignored and absent, flipping every model to
+        served=False and cascading into 409s. The test double knows what it
+        was given; report that.
+        """
+        available = {
+            "persistence": True,
+            "xgboost": self._booster is not None,
+            "lstm": self._sequence is not None,
+            "gru": self._sequence is not None,
+            "transformer": self._sequence is not None,
+        }
+        return [{"model_id": mid, "family": family, "artifact": artifact,
+                 "served": served and available.get(mid, False)}
+                for mid, (family, artifact, served) in REGISTRY.items()]
