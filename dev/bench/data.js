@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788507835478,
+  "lastUpdate": 1788509825535,
   "repoUrl": "https://github.com/Atharva0177/Solar-Energy-Prediction",
   "entries": {
     "Benchmark": [
@@ -104,6 +104,58 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 0.00023386676022256123",
             "extra": "mean: 9.75097213793086 msec\nrounds: 87"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "mandavkaratharva@gmail.com",
+            "name": "Atharva0177",
+            "username": "Atharva0177"
+          },
+          "committer": {
+            "email": "mandavkaratharva@gmail.com",
+            "name": "Atharva0177",
+            "username": "Atharva0177"
+          },
+          "distinct": true,
+          "id": "cb2ed32df53fdd626233ba9afaa03e1f1d63acf4",
+          "message": "docs: verify PRD section 56 acceptance criteria against repo artifacts\n\n29/30 done with evidence pointers; Random Forest marked skipped\n(never implemented in this build, already documented in configs and\nComparison page).\n\nCo-Authored-By: Claude <noreply@anthropic.com>",
+          "timestamp": "2026-09-04T13:45:17+05:30",
+          "tree_id": "1e66747cde8c2df5472ed4211007b509fc34f0a9",
+          "url": "https://github.com/Atharva0177/Solar-Energy-Prediction/commit/cb2ed32df53fdd626233ba9afaa03e1f1d63acf4"
+        },
+        "date": 1788509824847,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "tests/test_benchmarks.py::test_benchmark_xgboost_single_step",
+            "value": 515.4850647211954,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00014196097526826277",
+            "extra": "mean: 1.9399204136803823 msec\nrounds: 307"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_benchmark_api_forecast_xgboost",
+            "value": 17.299552111566857,
+            "unit": "iter/sec",
+            "range": "stddev: 0.001073741889192891",
+            "extra": "mean: 57.80496475000518 msec\nrounds: 12"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_benchmark_api_forecast_lstm",
+            "value": 32.26863599886313,
+            "unit": "iter/sec",
+            "range": "stddev: 0.002980309358926404",
+            "extra": "mean: 30.989844133332173 msec\nrounds: 30"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_benchmark_api_history",
+            "value": 108.05373266130844,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0003861304781412243",
+            "extra": "mean: 9.254654840425305 msec\nrounds: 94"
           }
         ]
       }
