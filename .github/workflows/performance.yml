@@ -31,6 +31,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip setuptools wheel
           pip install pytest pytest-benchmark pytest-xdist
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install -r requirements.txt
       
       - name: Run model inference benchmarks
@@ -66,6 +67,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pytest-benchmark httpx fastapi uvicorn
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install -r requirements.txt
       
       - name: Start API server
