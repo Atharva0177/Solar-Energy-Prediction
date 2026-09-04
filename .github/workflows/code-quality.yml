@@ -79,7 +79,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
+      - name: Install frontend dependencies
+        # Node Package Analyzer skips lockfiles without node_modules
+        run: npm ci --prefix frontend
+
       - name: Run OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
@@ -87,7 +91,10 @@ jobs:
           format: 'JSON'
           project: 'Solar-Energy-Prediction'
           out: 'reports'
-          args: --enableExperimental
+          # NodeAudit API unreachable from runners. Action runs with
+          # --noupdate: NVD refresh needs an NVD API key (repo secret) —
+          # add one and pass --nvdApiKey to enable fresh CVE data.
+          args: --enableExperimental --disableNodeAudit
       
       - name: Upload Dependency Check report
         if: always()
