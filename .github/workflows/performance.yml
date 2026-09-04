@@ -16,7 +16,9 @@ jobs:
   ml-benchmarks:
     name: ML Model Benchmarks
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: write  # benchmark-action commits results to gh-pages
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
