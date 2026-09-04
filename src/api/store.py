@@ -209,7 +209,7 @@ class ParquetStore:
                     dropout=float(params["dropout"]))
             ckpt = torch.load(
                 self.root / "models" / f"{model_id}_site_all_h1_v1.pt",
-                map_location="cpu")
+                map_location="cpu", weights_only=True)
             model.load_state_dict(ckpt["model_state_dict"])
             model.eval()
             self._seq_cache[model_id] = {

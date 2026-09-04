@@ -22,7 +22,8 @@ from __future__ import annotations
 
 import json
 import re
-import subprocess
+# subprocess is used only to launch the internal training script
+import subprocess  # nosec B404
 import sys
 import threading
 import time
@@ -206,7 +207,7 @@ def list_available_datasets():
                         "description": f"Uploaded dataset ({meta.get('mode', 'unknown')})",
                         "dataset_id": meta.get("dataset_id")
                     })
-                except:
+                except (OSError, json.JSONDecodeError):
                     pass
     
     if upload_dirs:
@@ -389,7 +390,9 @@ def start_job(req: TrainJobRequest):
     if req.fast_test:
         cmd.append("--fast-test")
     log_fh = log_path.open("w", encoding="utf-8")
-    proc = subprocess.Popen(cmd, stdout=log_fh, stderr=subprocess.STDOUT,
+    # cmd is server-built: sys.executable + fixed script + validated args;
+    # no shell, no user-controlled argv.
+    proc = subprocess.Popen(cmd, stdout=log_fh, stderr=subprocess.STDOUT,  # nosec B603
                             cwd=str(REPO_ROOT))
     _jobs[job_id] = {
         "job_id": job_id, "dataset_id": req.dataset_id, "model": req.model,

@@ -13,7 +13,10 @@ jobs:
   codeql:
     name: CodeQL Analysis
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: read
+      security-events: write
+
     strategy:
       fail-fast: false
       matrix:
@@ -82,9 +85,9 @@ jobs:
         with:
           path: '.'
           format: 'JSON'
-          args: >
-            --enableExperimental
-            --scan
+          project: 'Solar-Energy-Prediction'
+          out: 'reports'
+          args: --enableExperimental
       
       - name: Upload Dependency Check report
         if: always()
