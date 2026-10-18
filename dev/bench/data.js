@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791689787861,
+  "lastUpdate": 1792291522727,
   "repoUrl": "https://github.com/Atharva0177/Solar-Energy-Prediction",
   "entries": {
     "Benchmark": [
@@ -612,6 +612,56 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 0.00017890014918784042",
             "extra": "mean: 9.31120247916617 msec\nrounds: 96"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Atharva_177",
+            "username": "Atharva0177",
+            "email": "mandavkaratharva@gmail.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "613686763fc35a486be92bec5b662bc674979eef",
+          "message": "Create LICENSE",
+          "timestamp": "2026-09-08T06:03:51Z",
+          "url": "https://github.com/Atharva0177/Solar-Energy-Prediction/commit/613686763fc35a486be92bec5b662bc674979eef"
+        },
+        "date": 1792291521942,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "tests/test_benchmarks.py::test_benchmark_xgboost_single_step",
+            "value": 458.8299098962485,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0000921834379366107",
+            "extra": "mean: 2.1794568715586173 msec\nrounds: 327"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_benchmark_api_forecast_xgboost",
+            "value": 15.526650837574111,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0007715162648162908",
+            "extra": "mean: 64.40538983333255 msec\nrounds: 12"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_benchmark_api_forecast_lstm",
+            "value": 28.233763426930718,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0012967322574531706",
+            "extra": "mean: 35.41858677777799 msec\nrounds: 27"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_benchmark_api_history",
+            "value": 102.8666181070545,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00025668659072809925",
+            "extra": "mean: 9.721326688890347 msec\nrounds: 90"
           }
         ]
       }
